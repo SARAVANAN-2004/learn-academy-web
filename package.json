@@ -2,6 +2,9 @@
   "name": "learn-academy-web",
   "version": "0.0.0",
   "private": true,
+  "engines": {
+    "node": "16.x"
+  },
   "description": "Small description for learn-academy-web goes here",
   "repository": "",
   "license": "MIT",
