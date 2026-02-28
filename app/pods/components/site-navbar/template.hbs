@@ -1,0 +1,52 @@
+<!-- Navbar Start -->
+<nav
+  class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0"
+  {{did-insert this.setupSticky}}
+  {{will-destroy this.teardownSticky}}
+>
+  <a
+    href="#"
+    class="navbar-brand d-flex align-items-center px-4 px-lg-5"
+    {{on "click" (fn this.scrollTo "home")}}
+  >
+    <h2 class="m-0 text-primary">
+      <i class="fa fa-book me-3"></i>LearnAcademy
+    </h2>
+  </a>
+
+  <button
+    type="button"
+    class="navbar-toggler me-4"
+    data-bs-toggle="collapse"
+    data-bs-target="#navbarCollapse"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarCollapse">
+    <div class="navbar-nav ms-auto p-4 p-lg-0">
+
+      <a href="#" class="nav-item nav-link"
+        {{on "click" (fn this.scrollTo "home")}}>Home</a>
+
+      <a href="#" class="nav-item nav-link"
+        {{on "click" (fn this.scrollTo "about")}}>About</a>
+
+      <a href="#" class="nav-item nav-link"
+        {{on "click" (fn this.scrollTo "courses")}}>Courses</a>
+
+      <a href="#" class="nav-item nav-link"
+        {{on "click" (fn this.scrollTo "instructors")}}>Instructors</a>
+
+      <a href="#" class="nav-item nav-link"
+        {{on "click" (fn this.scrollTo "testimonials")}}>Testimonials</a>
+
+      <a href="#" class="nav-item nav-link"
+        {{on "click" (fn this.scrollTo "footer")}}>Contact</a>
+
+    </div>
+
+    <LinkTo @route="dashboard" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Join Now <i class="fa fa-arrow-right ms-3"></i></LinkTo>
+  </div>
+</nav>
+<!-- Navbar End -->

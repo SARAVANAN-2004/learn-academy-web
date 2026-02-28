@@ -1,0 +1,40 @@
+<!-- Testimonial Start -->
+<div class="container-xxl py-5">
+  <div class="container">
+    <div class="text-center">
+      <h6 class="section-title bg-white text-center text-primary px-3">
+        Testimonial
+      </h6>
+      <h1 class="mb-5">Our Students Say!</h1>
+    </div>
+
+    <div
+        class="d-flex overflow-hidden testimonial-container"
+        style="scroll-snap-type: x mandatory; gap: 24px; padding: 20px 40px; scroll-behavior: smooth;"
+        {{did-insert this.setupCarousel}}
+        {{will-destroy this.teardownCarousel}}
+        >
+      {{#each @testimonials as |testimonial index|}}
+        <div
+          class="testimonial-item text-center flex-shrink-0 {{if (eq this.currentIndex index) 'active'}}"
+          style="scroll-snap-align: center; width: 350px; max-width: 90vw;"
+          id="testimonial-{{index}}"
+        >
+          <img
+            class="border rounded-circle p-2 mx-auto mb-3 testimonial-img"
+            src={{testimonial.image}}
+            alt=""
+          />
+
+          <h5 class="mb-0">{{testimonial.name}}</h5>
+          <p>{{testimonial.role}}</p>
+
+          <div class="testimonial-text bg-light text-center p-4">
+            <p class="mb-0">{{testimonial.text}}</p>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</div>
+<!-- Testimonial End -->
