@@ -1,5 +1,13 @@
-<h2>Courses</h2>
+{{!-- <h2>Courses</h2>
 
 {{#each this.model as |course|}}
   <p>{{course.title}} - ₹{{course.price}}</p>
-{{/each}}
+{{/each}} --}}
+
+<h2>Dashboard</h2>
+
+<p>Welcome {{this.model.email}}</p>
+
+<button {{on "click" this.logout}}>
+  Logout
+</button>

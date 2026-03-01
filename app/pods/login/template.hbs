@@ -1,0 +1,31 @@
+<div class="auth-container">
+  <h2>Login</h2>
+
+  <form {{on "submit" this.login}}>
+    <input
+      type="email"
+      placeholder="Email"
+      value={{this.email}}
+      {{on "input" this.updateEmail}}
+      required
+    />
+
+    <input
+      type="password"
+      placeholder="Password"
+      value={{this.password}}
+      {{on "input" this.updatePassword}}
+      required
+    />
+
+    <button type="submit">Login</button>
+  </form>
+
+  <p>{{this.message}}</p>
+
+  <hr>
+
+  <button {{on "click" this.googleLogin}}>
+    Login with Google
+  </button>
+</div>

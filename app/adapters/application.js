@@ -4,4 +4,10 @@ import config from 'learn-academy-web/config/environment';
 export default class ApplicationAdapter extends JSONAPIAdapter {
   host = config.API_HOST;
   namespace = 'api';
+
+  get fetchOptions() {
+    return {
+      credentials: 'include'
+    };
+  }
 }
