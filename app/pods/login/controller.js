@@ -9,6 +9,11 @@ export default class LoginController extends Controller {
   @tracked email = '';
   @tracked password = '';
   @tracked message = '';
+  @tracked isSignUpActive = false;
+
+  @tracked signupUsername = '';
+  @tracked signupEmail = '';
+  @tracked signupPassword = '';
 
   @action
   updateEmail(e) {
@@ -18,6 +23,21 @@ export default class LoginController extends Controller {
   @action
   updatePassword(e) {
     this.password = e.target.value;
+  }
+
+  @action
+  updateSignupUsername(e) {
+    this.signupUsername = e.target.value;
+  }
+
+  @action
+  updateSignupEmail(e) {
+    this.signupEmail = e.target.value;
+  }
+
+  @action
+  updateSignupPassword(e) {
+    this.signupPassword = e.target.value;
   }
 
   @action
@@ -42,6 +62,34 @@ export default class LoginController extends Controller {
 
     } catch (err) {
       this.message = 'Server error';
+    }
+  }
+
+  @action
+  async signupUser(e) {
+    e.preventDefault();
+
+    try {
+      let response = await apiRequest('/api/auth/signup', {
+        method: 'POST',
+        body: JSON.stringify({
+          username: this.signupUsername,
+          email: this.signupEmail,
+          password: this.signupPassword
+        })
+      });
+
+      if (response.ok) {
+        let data = await response.json();
+        console.log('Success:', data);
+        alert('Sign up successful!');
+        this.isSignUpActive = false;
+      } else {
+        let text = await response.text();
+        this.message = `Server error: ${response.status} - ${text}`;
+      }
+    } catch (err) {
+      this.message = `Error: ${err.message}`;
     }
   }
 

@@ -1,31 +1,65 @@
-<div class="auth-container">
-  <h2>Login</h2>
+{{page-title "Login"}}
+<div class="login-page-body-override">
+    {{#if this.message}}
+    <div
+        style="position: absolute; top: 10px; background: red; color: white; padding: 10px; z-index: 999; border-radius: 5px;">
+        {{this.message}}
+    </div>
+    {{/if}}
 
-  <form {{on "submit" this.login}}>
-    <input
-      type="email"
-      placeholder="Email"
-      value={{this.email}}
-      {{on "input" this.updateEmail}}
-      required
-    />
+    <div class="container {{if this.isSignUpActive 'right-panel-active'}}">
+        <!-- Sign Up Form -->
+        <div class="container__form container--signup">
+            <form class="form" {{on "submit" this.signupUser}}>
+                <h2 class="form__title">SIGN UP</h2>
+                <input value={{this.signupUsername}} type="text" placeholder="User" class="input" {{on "input"
+                    this.updateSignupUsername}} />
+                <input value={{this.signupEmail}} type="email" placeholder="Email" class="input" {{on "input"
+                    this.updateSignupEmail}} />
+                <input value={{this.signupPassword}} type="password" placeholder="Password" class="input" {{on "input"
+                    this.updateSignupPassword}} />
 
-    <input
-      type="password"
-      placeholder="Password"
-      value={{this.password}}
-      {{on "input" this.updatePassword}}
-      required
-    />
+                <div class="segment">
+                    <button type="button" class="btn btn-block" {{on "click" this.googleLogin}}>
+                        <i class="fab fa-google"></i>
+                        Sign Up with Google
+                    </button>
+                </div>
+                <button type="submit" class="btn">Sign Up</button>
+            </form>
+        </div>
 
-    <button type="submit">Login</button>
-  </form>
+        <!-- Sign In Form -->
+        <div class="container__form container--signin">
+            <form class="form" {{on "submit" this.login}}>
+                <h2 class="form__title">LOGIN</h2>
+                <input value={{this.email}} type="email" placeholder="Email" class="input" {{on "input"
+                    this.updateEmail}} />
+                <input value={{this.password}} type="password" placeholder="Password" class="input" {{on "input"
+                    this.updatePassword}} />
+                <a href="#" class="link">Forgot your password?</a>
 
-  <p>{{this.message}}</p>
+                <div class="segment">
+                    <button type="button" class="btn btn-block" {{on "click" this.googleLogin}}>
+                        <i class="fab fa-google"></i>
+                        Sign In with Google
+                    </button>
+                </div>
+                <button type="submit" class="btn">Login</button>
+            </form>
+        </div>
 
-  <hr>
-
-  <button {{on "click" this.googleLogin}}>
-    Login with Google
-  </button>
+        <!-- Overlay Panel -->
+        <div class="container__overlay">
+            <div class="overlay">
+                <div class="overlay__panel overlay--left">
+                    <button type="button" class="btn" {{on "click" (fn (mut this.isSignUpActive) false)}}>LOGIN</button>
+                </div>
+                <div class="overlay__panel overlay--right">
+                    <button type="button" class="btn" {{on "click" (fn (mut this.isSignUpActive) true)}}>SIGN
+                        UP</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
