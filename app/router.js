@@ -11,4 +11,5 @@ Router.map(function () {
   this.route('dashboard');
   this.route('signup');
   this.route('login');
+  this.route('mylearning');
 });

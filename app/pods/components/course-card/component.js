@@ -4,6 +4,8 @@ import { inject as service } from '@ember/service';
 import { apiRequest } from 'learn-academy-web/utils/api';
 
 export default class CourseCardComponent extends Component {
+    @service router;
+
     @action
     async enroll() {
         try {
@@ -18,5 +20,10 @@ export default class CourseCardComponent extends Component {
             console.error("Enrollment failed:", err);
             alert("Something went wrong. Please try again.");
         }
+    }
+
+    @action
+    goToCourse() {
+        this.router.transitionTo('viewCourse', { queryParams: { courseId: this.args.course.id } });
     }
 }

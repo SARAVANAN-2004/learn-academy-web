@@ -15,6 +15,10 @@
             <span class={{@course.courseType}}>{{@course.courseType}}</span>
             {{/if}}
         </div>
+        {{#if @isEnrolled}}
+        <button type="button" {{on "click" this.goToCourse}}>Go to Course</button>
+        {{else}}
         <button type="button" {{on "click" this.enroll}}>Enroll Now</button>
+        {{/if}}
     </div>
 </div>
