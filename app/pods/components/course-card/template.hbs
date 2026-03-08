@@ -1,1 +1,20 @@
-{{yield}}
+<div class="course-card">
+    <div class="image-container">
+        <img src={{@course.imageUrl}} alt="Course Image" />
+    </div>
+    <div class="course-info">
+        <h3>{{@course.title}}</h3>
+        <p class="instructor">Instructor: {{@course.instructor}}</p>
+        <div class="rating">⭐ {{@course.rating}}</div>
+        <div class="price">
+            <span class="discount-price">₹{{@course.price}}</span>
+            <span class="original-price" style="text-decoration: line-through;">₹{{@course.originalPrice}}</span>
+        </div>
+        <div class="badges">
+            {{#if @course.courseType}}
+            <span class={{@course.courseType}}>{{@course.courseType}}</span>
+            {{/if}}
+        </div>
+        <button type="button" {{on "click" this.enroll}}>Enroll Now</button>
+    </div>
+</div>

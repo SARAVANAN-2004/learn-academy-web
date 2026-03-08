@@ -12,7 +12,8 @@ export default class DashboardRoute extends Route {
   }
 
   async model() {
-    let res = await apiRequest('/api/auth/me');
-    return res.json();
+    let res = await apiRequest('/api/dashboard');
+    let data = await res.json();
+    return data.courses || [];
   }
 }

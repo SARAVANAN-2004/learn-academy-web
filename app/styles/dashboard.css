@@ -89,13 +89,12 @@ h2 {
 }
 
 /* Courses Grid */
-.courses-container {
+.dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    justify-content: center;
-    max-width: 1200px; /* 👈 limits container width */
-    margin: 0 auto;     /* 👈 centers the container */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 
@@ -105,12 +104,14 @@ h2 {
     flex-direction: column;
     justify-content: space-between;
     background: white;
-    border-radius: 10px;
+    border-radius: 8px;
+    /* Standardized to 8px from instructions */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     padding: 0;
-    min-height: 420px;
+    height: 100%;
+    /* Ensure equal card height */
 }
 
 .course-card:hover {
@@ -120,7 +121,9 @@ h2 {
 
 .image-container img {
     width: 100%;
-    height: auto;
+    height: 180px;
+    /* Fixed scale image height for all cards */
+    object-fit: cover;
 }
 
 .course-info {

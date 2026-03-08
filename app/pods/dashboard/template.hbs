@@ -1,13 +1,30 @@
-{{!-- <h2>Courses</h2>
+{{page-title "Dashboard"}}
 
-{{#each this.model as |course|}}
-  <p>{{course.title}} - ₹{{course.price}}</p>
-{{/each}} --}}
+<header>
+    <div class="logo">IQMath</div>
+    <nav>
+        <ul class="nav-links">
+            <li><a href="/dashboard">Explore</a></li>
+            <li><a href="/AddCourseContent/MainCoursePage.html">Teach on IQMath</a></li>
+            <li><a href="/mylearning">My Learning</a></li>
+        </ul>
+    </nav>
+    <input type="text" class="search-bar" placeholder="Search courses..." />
+    <div class="icons">
+        <span class="icon">🛒</span>
+        <span class="icon">🔔</span>
+        <a href="/Profile/index.html"><span class="icon">👤</span></a>
+        <button type="button" class="logout-btn"
+            style="background: none; border: none; font-size: 1.2rem; cursor: pointer; margin-left: 10px;" {{on "click"
+            this.logout}} title="Logout">🚪</button>
+    </div>
+</header>
 
-<h2>Dashboard</h2>
-
-<p>Welcome {{this.model.email}}</p>
-
-<button {{on "click" this.logout}}>
-  Logout
-</button>
+<main>
+    <h2>Recommended Courses</h2>
+    <div class="dashboard-grid">
+        {{#each this.model as |course|}}
+        <CourseCard @course={{course}} />
+        {{/each}}
+    </div>
+</main>
