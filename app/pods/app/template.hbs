@@ -1,12 +1,12 @@
-{{page-title "Dashboard"}}
-
+<NotificationContainer />
+{{!-- Shared Header --}}
 <header>
-    <div class="logo">IQMath</div>
+    <div class="logo">Learn Academy</div>
     <nav>
         <ul class="nav-links">
-            <li><a href="/dashboard">Explore</a></li>
-            <li><a href="/AddCourseContent/MainCoursePage.html">Teach on IQMath</a></li>
-            <li><a href="/mylearning">My Learning</a></li>
+            <li><a href="/app/dashboard">Explore</a></li>
+            <li><a href="/AddCourseContent/MainCoursePage.html">Teach on Learn Academy</a></li>
+            <li><a href="/app/mylearning">My Learning</a></li>
         </ul>
     </nav>
     <input type="text" class="search-bar" placeholder="Search courses..." />
@@ -20,11 +20,6 @@
     </div>
 </header>
 
-<main>
-    <h2>Recommended Courses</h2>
-    <div class="dashboard-grid">
-        {{#each this.model as |course|}}
-        <CourseCard @course={{course}} />
-        {{/each}}
-    </div>
+<main class="main-content">
+    {{outlet}}
 </main>

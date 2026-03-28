@@ -1,8 +1,10 @@
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
 import { apiRequest } from 'learn-academy-web/utils/api';
 
 export default class DashboardController extends Controller {
+  @service notification;
 
   @action
   async logout() {
@@ -21,10 +23,10 @@ export default class DashboardController extends Controller {
       });
 
       let data = await response.json();
-      alert(data.message || "Enrolled successfully!");
+      this.notification.success(data.message || "Enrolled successfully!");
     } catch (err) {
       console.error("Enrollment failed:", err);
-      alert("Something went wrong. Please try again.");
+      this.notification.error("Something went wrong. Please try again.");
     }
   }
 }

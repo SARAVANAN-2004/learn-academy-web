@@ -1,0 +1,12 @@
+{{page-title "Dashboard"}}
+
+
+
+<main>
+    <h2>Recommended Courses</h2>
+    <div class="dashboard-grid">
+        {{#each this.model as |course|}}
+        <CourseCard @course={{course}} />
+        {{/each}}
+    </div>
+</main>

@@ -5,6 +5,7 @@ import { apiRequest } from 'learn-academy-web/utils/api';
 
 export default class CourseCardComponent extends Component {
     @service router;
+    @service notification;
 
     @action
     async enroll() {
@@ -15,15 +16,15 @@ export default class CourseCardComponent extends Component {
             });
 
             let data = await response.json();
-            alert(data.message || "Enrolled successfully!");
+            this.notification.success(data.message || "Enrolled successfully!");
         } catch (err) {
             console.error("Enrollment failed:", err);
-            alert("Something went wrong. Please try again.");
+            this.notification.error("Something went wrong. Please try again.");
         }
     }
 
     @action
     goToCourse() {
-        this.router.transitionTo('viewCourse', { queryParams: { courseId: this.args.course.id } });
+        this.router.transitionTo('app.view-course', this.args.course.id);
     }
 }

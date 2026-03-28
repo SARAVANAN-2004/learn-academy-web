@@ -5,8 +5,15 @@
 /* PAGES */
 @import "login.css";
 @import "dashboard.css";
+@import "viewCourse.css";
+@import "loadingSpinner.css";
+@import "notifications.css";
 /* @import "CourseDashboard.css";
 @import "CreateCourse.css";
 @import "EnrollmentSteps.css";
 @import "MainCoursePage.css";
-@import "viewCourse.css"; */
+ */
+
+.main-content {
+    padding: 20px;
+}

@@ -1,0 +1,102 @@
+/* ================================
+   Notification Container (CENTER)
+================================ */
+.notification-container {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+
+    pointer-events: none; // allow clicks through container
+}
+
+/* ================================
+   Notification Card
+================================ */
+.notification {
+    pointer-events: auto;
+
+    min-width: 280px;
+    max-width: 420px;
+
+    padding: 14px 20px;
+    border-radius: 12px;
+
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+
+    animation: slideInNotification 0.3s ease;
+
+    // optional modern glass effect
+    backdrop-filter: blur(10px);
+
+    span {
+        flex: 1;
+    }
+
+    .close-btn {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 22px;
+        line-height: 1;
+        cursor: pointer;
+
+        opacity: 0.7;
+        margin-left: 15px;
+        padding: 0;
+
+        transition: opacity 0.2s ease;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
+
+/* ================================
+   Notification Types
+================================ */
+.notification.success {
+    background: #16a34a;
+}
+
+.notification.error {
+    background: #dc2626;
+}
+
+.notification.info {
+    background: #2563eb;
+}
+
+.notification.warning {
+    background: #f59e0b;
+}
+
+/* ================================
+   Animation (Modern)
+================================ */
+@keyframes slideInNotification {
+    from {
+        transform: translateY(-20px) scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}

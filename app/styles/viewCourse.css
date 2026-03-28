@@ -1,145 +1,144 @@
-/* General Styles */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
+/* Global Styles (same as dashboard) */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
 }
 
-/* Header Styling */
+body {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Header (match dashboard) */
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #fff;
+    background: #1e3a8a;
+    color: white;
     padding: 15px 20px;
-    border-bottom: 1px solid #ddd;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .logo {
-    font-size: 1.8rem;
+    font-size: 24px;
     font-weight: bold;
-    color: #333;
+    cursor: pointer;
 }
 
+/* Navigation */
 .nav-links {
-    list-style: none;
     display: flex;
+    list-style: none;
     gap: 20px;
-    margin: 0;
-    padding: 0;
-}
-
-.nav-links li {
-    display: inline;
 }
 
 .nav-links a {
     text-decoration: none;
-    color: #333;
-    font-size: 1rem;
-    font-weight: bold;
-    transition: color 0.3s ease-in-out;
+    color: white;
+    font-size: 16px;
+    transition: color 0.3s ease;
 }
 
 .nav-links a:hover {
-    color: #007bff;
+    color: #ffcc00;
 }
 
 /* Search Bar */
 .search-bar {
+    width: 30%;
     padding: 8px;
-    width: 250px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    font-size: 16px;
 }
 
 /* Icons */
 .icons {
     display: flex;
     gap: 15px;
+    font-size: 20px;
 }
 
 .icon {
-    font-size: 1.5rem;
     cursor: pointer;
-    transition: color 0.3s ease-in-out;
+    transition: transform 0.3s ease;
 }
 
 .icon:hover {
-    color: #007bff;
+    transform: scale(1.1);
 }
 
-/* Main Content Layout */
+/* Layout */
 .container-fluid {
-    padding: 20px;
+    padding: 30px;
 }
 
-/* Video Section */
+/* Video Section (card style like dashboard) */
 .video-container {
-    background-color: #fff;
+    background: white;
     padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     margin-bottom: 20px;
 }
 
-/* Sidebar - Course Sections */
+/* Sidebar (accordion like card) */
 .accordion {
-    background-color: #fff;
-    border-radius: 10px;
+    background: white;
+    border-radius: 8px;
     padding: 10px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-.accordion-header {
-    font-weight: bold;
-}
-
+/* Accordion Buttons */
 .accordion-button {
-    background-color: #007bff;
-    color: #fff;
+    background: #1e3a8a;
+    color: white;
     font-weight: bold;
     border-radius: 5px;
-    transition: background-color 0.3s ease-in-out;
+    transition: background 0.3s ease;
 }
 
 .accordion-button:hover {
-    background-color: #0056b3;
+    background: #142b6f;
 }
 
 .accordion-body {
-    background-color: #f1f1f1;
+    background: #f1f1f1;
     padding: 15px;
     border-radius: 5px;
 }
 
+/* Lesson Items */
 .list-group-item {
     cursor: pointer;
-    transition: background 0.3s ease-in-out;
+    transition: background 0.3s ease;
 }
 
 .list-group-item:hover {
-    background-color: #ddd;
+    background-color: #e0e0e0;
 }
 
-/* Tabs Below Video */
+/* Tabs Section (same card style) */
 .tabs-container {
-    background-color: #fff;
+    background: white;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
+/* Tabs */
 .nav-tabs .nav-link {
-    color: #333;
+    color: #1e3a8a;
     font-weight: bold;
 }
 
 .nav-tabs .nav-link.active {
-    background-color: #007bff;
-    color: #fff;
+    background: #1e3a8a;
+    color: white;
     border-radius: 5px;
 }
 
@@ -150,32 +149,31 @@ header {
     border-radius: 5px;
 }
 
-/* Textarea Styling */
+/* Textarea */
 textarea {
     width: 100%;
     min-height: 100px;
     padding: 10px;
-    border: 1px solid #ccc;
     border-radius: 5px;
-    resize: vertical;
+    border: 1px solid #ccc;
 }
 
-/* Submit Buttons */
+/* Buttons (match dashboard button style) */
 .btn-primary {
-    background-color: #007bff;
+    background: #1e3a8a;
     border: none;
-    padding: 10px 15px;
-    font-size: 1rem;
+    padding: 10px;
+    font-size: 16px;
     font-weight: bold;
     border-radius: 5px;
-    transition: background-color 0.3s ease-in-out;
+    transition: background 0.3s ease;
 }
 
 .btn-primary:hover {
-    background-color: #0056b3;
+    background: #142b6f;
 }
 
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 768px) {
     header {
         flex-direction: column;
@@ -189,13 +187,5 @@ textarea {
 
     .container-fluid {
         padding: 10px;
-    }
-
-    .col-md-8, .col-md-4 {
-        width: 100%;
-    }
-
-    .accordion-button {
-        font-size: 0.9rem;
     }
 }

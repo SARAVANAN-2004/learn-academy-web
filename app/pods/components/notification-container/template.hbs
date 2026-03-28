@@ -1,0 +1,8 @@
+<div class="notification-container">
+    {{#each this.notification.messages as |msg|}}
+    <div class="notification {{msg.type}}" role="alert">
+        <span>{{msg.text}}</span>
+        <button type="button" class="close-btn" {{on "click" (fn this.notification.remove msg.id)}}>&times;</button>
+    </div>
+    {{/each}}
+</div>

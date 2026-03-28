@@ -1,10 +1,12 @@
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { apiRequest } from 'learn-academy-web/utils/api';
 import config from 'learn-academy-web/config/environment';
 
 export default class LoginController extends Controller {
+  @service notification;
 
   @tracked email = '';
   @tracked password = '';
@@ -54,7 +56,7 @@ export default class LoginController extends Controller {
       });
 
       if (response.ok) {
-        window.location.href = '/dashboard';
+        window.location.href = '/app/dashboard';
       } else {
         let data = await response.json();
         this.message = data.message || 'Invalid credentials';
@@ -82,7 +84,7 @@ export default class LoginController extends Controller {
       if (response.ok) {
         let data = await response.json();
         console.log('Success:', data);
-        alert('Sign up successful!');
+        this.notification.success('Sign up successful!');
         this.isSignUpActive = false;
       } else {
         let text = await response.text();
