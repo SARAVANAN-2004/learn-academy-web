@@ -1,0 +1,169 @@
+// ============================================
+// Enrollment Steps page — scoped under .enrollment-page
+// Extracted from EnrollmentSteps.css
+// ============================================
+@import "../base/variables";
+
+.enrollment-page {
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        background: transparent !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+
+    .step-indicator {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-size: 16px;
+        font-weight: 600;
+        color: $indigo;
+    }
+
+    .progress-bar {
+        height: 6px;
+        width: 180px;
+        background: $gray-200;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .progress {
+        height: 100%;
+        background: linear-gradient(90deg, $indigo, $violet);
+    }
+
+    .exit-btn {
+        background: linear-gradient(135deg, $indigo, $violet);
+        color: $white;
+        padding: 8px 16px;
+        border-radius: $radius-md;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        transition: 0.3s;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(99, 102, 241, 0.3);
+        }
+    }
+
+    .step-content {
+        background: $white;
+        padding: 25px;
+        border-radius: $radius-xl;
+        border: 1px solid $gray-200;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: $gray-900;
+        }
+    }
+
+    label {
+        font-weight: 600;
+        color: $gray-700;
+    }
+
+    .required {
+        color: #ef4444;
+        margin-left: 4px;
+    }
+
+    .char-count {
+        font-size: 12px;
+        color: $gray-400;
+        text-align: right;
+    }
+
+    input,
+    textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0 5px;
+        border: 1px solid $gray-200;
+        border-radius: 6px;
+        font-size: 14px;
+
+        &:focus {
+            border-color: $indigo;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+            outline: none;
+        }
+    }
+
+    .next-btn,
+    .previous-btn,
+    .finish-btn,
+    .continue-btn {
+        background: linear-gradient(135deg, $indigo, $violet);
+        color: $white;
+        padding: 10px 18px;
+        border-radius: $radius-md;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+
+        &:hover {
+            transform: translateY(-2px);
+        }
+    }
+
+    .action-btns {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    // Step 1 options
+    .options {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 20px;
+    }
+
+    .option {
+        text-align: center;
+        cursor: pointer;
+        padding: 12px;
+        border-radius: $radius-md;
+        transition: background 0.2s;
+
+        &.selected {
+            background: $indigo-hover;
+        }
+
+        &:hover {
+            background: $indigo-hover;
+        }
+
+        img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+    }
+
+    // Step 3 category dropdown
+    .category-dropdown {
+        background-color: $white;
+        padding: 10px;
+        border-radius: $radius-sm;
+        border: 1px solid #ccc;
+        width: 100%;
+    }
+
+    // Step 5 time options
+    .time-options label {
+        display: block;
+        margin: 10px 0;
+    }
+}

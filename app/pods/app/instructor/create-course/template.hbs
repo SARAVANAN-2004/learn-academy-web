@@ -1,0 +1,54 @@
+<div class="create-course-page">
+    <div class="container">
+        <h1>Create Course</h1>
+        <button type="button" class="create-btn" {{on "click" this.addSection}}>+ Add Section</button>
+
+        <div id="sections">
+            {{#each this.sections key="@index" as |section sIndex|}}
+            <div class="section">
+                <h2>Section {{sIndex}}</h2>
+                <input type="text" id="section-title-{{sIndex}}" name="section-title-{{sIndex}}"
+                    placeholder="Section Title" class="section-title" {{on "input" (fn this.updateSectionTitle
+                    sIndex)}}><br>
+
+                <button type="button" class="add-lesson-btn" {{on "click" (fn this.addLesson sIndex)}}>+ Add
+                    Lesson</button>
+
+                <div class="lessons">
+                    {{#each section.lessons key="@index" as |lesson lIndex|}}
+                    <div class="lesson">
+                        <input type="text" id="lesson-title-{{sIndex}}-{{lIndex}}"
+                            name="lesson-title-{{sIndex}}-{{lIndex}}" placeholder="Lesson Title" class="lesson-title"
+                            {{on "input" (fn this.updateLesson sIndex lIndex "title" )}}>
+
+                        <input type="text" id="lesson-video-{{sIndex}}-{{lIndex}}"
+                            name="lesson-video-{{sIndex}}-{{lIndex}}" placeholder="YouTube Video URL"
+                            class="lesson-video" {{on "input" (fn this.updateLesson sIndex lIndex "video" )}}>
+
+                        <div class="video-preview">
+                            {{#if lesson.videoEmbed}}
+                            <iframe width="300" height="180" src={{lesson.videoEmbed}} frameborder="0"
+                                allowfullscreen></iframe>
+                            {{/if}}
+                        </div>
+
+                        <textarea id="lesson-resources-{{sIndex}}-{{lIndex}}"
+                            name="lesson-resources-{{sIndex}}-{{lIndex}}" placeholder="Add Resources (optional)"
+                            class="lesson-resources" rows="2" {{on "input" (fn this.updateLesson sIndex
+                            lIndex "resources" )}}></textarea>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+            {{/each}}
+        </div>
+
+        <div class="summary">
+            <h3>Course Summary</h3>
+            <textarea id="courseSummary" name="courseSummary" rows="4" placeholder="Write a summary of the course..."
+                {{on "input" this.updateSummary}}></textarea>
+        </div>
+
+        <button type="button" class="submit-btn" {{on "click" this.submitCourse}}>Submit Course</button>
+    </div>
+</div>

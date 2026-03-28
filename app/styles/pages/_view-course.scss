@@ -1,0 +1,106 @@
+// ============================================
+// View Course page — scoped under .view-course-page
+// Extracted from viewCourse.css
+// ============================================
+@import "../base/variables";
+
+.view-course-page {
+
+    &.container-fluid {
+        padding: 30px;
+    }
+
+    .video-container {
+        background: $white;
+        padding: 15px;
+        border-radius: $radius-md;
+        box-shadow: $shadow-sm;
+        margin-bottom: 20px;
+    }
+
+    .accordion {
+        background: $white;
+        border-radius: $radius-md;
+        padding: 10px;
+        box-shadow: $shadow-sm;
+
+        .accordion-button {
+            background: $blue;
+            color: $white;
+            font-weight: bold;
+            border-radius: $radius-sm;
+            transition: background 0.3s ease;
+
+            &:hover {
+                background: #142b6f;
+            }
+        }
+
+        .accordion-body {
+            background: #f1f1f1;
+            padding: 15px;
+            border-radius: $radius-sm;
+        }
+    }
+
+    .list-group-item {
+        cursor: pointer;
+        transition: background 0.3s ease;
+
+        &:hover {
+            background-color: #e0e0e0;
+        }
+    }
+
+    .tabs-container {
+        background: $white;
+        padding: 20px;
+        border-radius: $radius-md;
+        box-shadow: $shadow-sm;
+    }
+
+    .nav-tabs .nav-link {
+        color: $blue;
+        font-weight: bold;
+
+        &.active {
+            background: $blue;
+            color: $white;
+            border-radius: $radius-sm;
+        }
+    }
+
+    .tab-content {
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: $radius-sm;
+    }
+
+    textarea {
+        width: 100%;
+        min-height: 100px;
+        padding: 10px;
+        border-radius: $radius-sm;
+        border: 1px solid #ccc;
+    }
+
+    .btn-primary {
+        background: $blue;
+        border: none;
+        padding: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: $radius-sm;
+        transition: background 0.3s ease;
+
+        &:hover {
+            background: #142b6f;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .container-fluid {
+            padding: 10px;
+        }
+    }
+}

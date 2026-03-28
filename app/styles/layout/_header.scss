@@ -1,0 +1,67 @@
+// ============================================
+// Shared App Header (from app/pods/app/template.hbs)
+// ============================================
+@import "../base/variables";
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, $blue, $blue-mid);
+    color: $white;
+    padding: 15px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    .logo {
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+
+    a {
+        text-decoration: none;
+        color: #e5e7eb;
+        font-size: 16px;
+        transition: 0.3s;
+
+        &:hover {
+            color: $gold;
+        }
+    }
+}
+
+.search-bar {
+    width: 30%;
+    padding: 8px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    background: $white;
+    color: #333;
+
+    &::placeholder {
+        color: #888;
+    }
+}
+
+.icons {
+    display: flex;
+    gap: 15px;
+    font-size: 20px;
+}
+
+.icon {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+}

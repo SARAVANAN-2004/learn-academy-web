@@ -1,0 +1,62 @@
+// ============================================
+// Typography helpers — extracted from home.css
+// ============================================
+@import "variables";
+
+:root {
+    --primary: #{$primary};
+    --light: #{$light};
+    --dark: #{$dark};
+}
+
+.fw-medium {
+    font-weight: 600;
+}
+
+.fw-semi-bold {
+    font-weight: 700;
+}
+
+section {
+    scroll-margin-top: 100px;
+}
+
+.section-title {
+    position: relative;
+    display: inline-block;
+    text-transform: uppercase;
+
+    &::before {
+        position: absolute;
+        content: "";
+        width: calc(100% + 80px);
+        height: 2px;
+        top: 4px;
+        left: -40px;
+        background: var(--primary);
+        z-index: -1;
+    }
+
+    &::after {
+        position: absolute;
+        content: "";
+        width: calc(100% + 120px);
+        height: 2px;
+        bottom: 5px;
+        left: -60px;
+        background: var(--primary);
+        z-index: -1;
+    }
+
+    &.text-start {
+        &::before {
+            width: calc(100% + 40px);
+            left: 0;
+        }
+
+        &::after {
+            width: calc(100% + 60px);
+            left: 0;
+        }
+    }
+}

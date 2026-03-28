@@ -1,0 +1,173 @@
+<div class="enrollment-page">
+    <div class="container">
+        <header class="header">
+            <div class="step-indicator">
+                <span class="step">Step {{this.currentStep}} of 5</span>
+                <div class="progress-bar">
+                    <div class="progress" style={{this.progressStyle}}></div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            {{#if (eq this.currentStep 1)}}
+            <section class="step-content active">
+                <h1>First, let's find out what type of course you're making.</h1>
+                <div class="options">
+                    <div class="option {{if (eq this.courseType 'Course') 'selected'}}" role="button" {{on "click" (fn
+                        this.selectCourseType 'Course' )}}>
+                        <img src="https://placehold.co/100" alt="Course" />
+                        <h3>Course</h3>
+                        <p>Create rich learning experiences with the help of video lectures, quizzes, coding exercises,
+                            etc.
+                        </p>
+                    </div>
+                </div>
+                <button type="button" class="next-btn" {{on "click" (fn this.nextStep 2)}}>Next</button>
+            </section>
+            {{/if}}
+
+            {{#if (eq this.currentStep 2)}}
+            <section class="step-content active">
+                <h1>How about a working title?</h1>
+                <p>It's ok if you can't think of a good title now. You can change it later.</p>
+                <input type="text" id="course-title" value={{this.title}} {{on "input" (fn this.updateField "title" )}}
+                    placeholder="e.g. Learn Photoshop CS6 from Scratch" />
+                <div class="char-count">{{this.titleCharCount}}</div>
+
+                <div class="image-upload">
+                    <label>Paste an image URL for the title card:</label>
+                    <input type="text" id="title-card-img" value={{this.imageUrl}} {{on "input" (fn
+                        this.updateField "imageUrl" )}} placeholder="e.g. https://example.com/image.png" />
+                    {{#if this.imageUrl}}
+                    <div id="image-preview" style="margin-top: 10px;">
+                        <img src={{this.imageUrl}} alt="Preview" style="max-width: 300px;" />
+                    </div>
+                    {{/if}}
+                </div>
+
+                <div class="action-btns">
+                    <button type="button" class="previous-btn" {{on "click" (fn this.previousStep 1)}}>Previous</button>
+                    <button type="button" class="next-btn" {{on "click" (fn this.nextStep 3)}}>Next</button>
+                </div>
+            </section>
+            {{/if}}
+
+            {{#if (eq this.currentStep 3)}}
+            <section class="step-content active">
+                <h1>What category best fits the knowledge you'll share?</h1>
+                <p>If you're not sure about the right category, you can change it later.</p>
+                <select class="category-dropdown" {{on "change" (fn this.updateField "category" )}}>
+                    <option value="" disabled selected={{not this.category}}>Choose a category</option>
+                    <option value="development" selected={{eq this.category "development" }}>Development</option>
+                    <option value="business" selected={{eq this.category "business" }}>Business</option>
+                    <option value="finance" selected={{eq this.category "finance" }}>Finance & Accounting</option>
+                    <option value="it_software" selected={{eq this.category "it_software" }}>IT & Software</option>
+                    <option value="office_productivity" selected={{eq this.category "office_productivity" }}>Office
+                        Productivity</option>
+                    <option value="personal_development" selected={{eq this.category "personal_development" }}>Personal
+                        Development</option>
+                    <option value="design" selected={{eq this.category "design" }}>Design</option>
+                    <option value="marketing" selected={{eq this.category "marketing" }}>Marketing</option>
+                    <option value="lifestyle" selected={{eq this.category "lifestyle" }}>Lifestyle</option>
+                    <option value="photography" selected={{eq this.category "photography" }}>Photography & Video
+                    </option>
+                    <option value="health_fitness" selected={{eq this.category "health_fitness" }}>Health & Fitness
+                    </option>
+                    <option value="music" selected={{eq this.category "music" }}>Music</option>
+                    <option value="teaching_academics" selected={{eq this.category "teaching_academics" }}>Teaching &
+                        Academics</option>
+                    <option value="dont_know" selected={{eq this.category "dont_know" }}>I don't know yet</option>
+                </select>
+                <button type="button" class="continue-btn" {{on "click" (fn this.nextStep 4)}}>Continue</button>
+            </section>
+            {{/if}}
+
+            {{#if (eq this.currentStep 4)}}
+            <section class="step-content active">
+                <h1>Plan your course</h1>
+                <h3>Intended Learners</h3>
+
+                <div class="course-description">
+                    <label>What will students learn in your course?</label>
+                    <textarea value={{this.learnObjectives}} {{on "input" (fn this.updateField "learnObjectives" )}}
+                        placeholder="Example: Define the roles and responsibilities of a project manager"></textarea>
+                    <div class="char-count">160</div>
+                </div>
+
+                <div class="course-description">
+                    <label>What are the requirements or prerequisites for taking your course?</label>
+                    <textarea value={{this.requirements}} {{on "input" (fn this.updateField "requirements" )}}
+                        placeholder="Example: No programming experience needed."></textarea>
+                    <div class="char-count">160</div>
+                </div>
+
+                <div class="course-description">
+                    <label>Who is this course for?</label>
+                    <textarea value={{this.whoIsThisFor}} {{on "input" (fn this.updateField "whoIsThisFor" )}}
+                        placeholder="Example: Beginner Python developers curious about data science."></textarea>
+                    <div class="char-count">160</div>
+                </div>
+
+                <div class="course-description">
+                    <label>Instructor Name</label>
+                    <input type="text" value={{this.instructorName}} {{on "input" (fn this.updateField "instructorName"
+                        )}} placeholder="e.g. John Doe" />
+                </div>
+
+                <div class="course-description">
+                    <label>Original Price (INR)</label>
+                    <input type="number" value={{this.originalPrice}} {{on "input" (fn this.updateField "originalPrice"
+                        )}} placeholder="e.g. 1999" />
+                </div>
+
+                <div class="course-description">
+                    <label>Discounted Price (INR)</label>
+                    <input type="number" value={{this.discountedPrice}} {{on "input" (fn
+                        this.updateField "discountedPrice" )}} placeholder="e.g. 499" />
+                </div>
+
+                <div class="course-description">
+                    <label>Course Rating (default is 5)</label>
+                    <input type="number" min="1" max="5" value={{this.rating}} {{on "input" (fn
+                        this.updateField "rating" )}} />
+                </div>
+
+                <div class="course-description">
+                    <label>Badges (comma-separated)</label>
+                    <input type="text" value={{this.badges}} {{on "input" (fn this.updateField "badges" )}}
+                        placeholder="e.g. Premium, Bestseller" />
+                </div>
+
+                <div class="action-btns">
+                    <button type="button" class="previous-btn" {{on "click" (fn this.previousStep 3)}}>Previous</button>
+                    <button type="button" class="next-btn" {{on "click" (fn this.nextStep 5)}}>Next</button>
+                </div>
+            </section>
+            {{/if}}
+
+            {{#if (eq this.currentStep 5)}}
+            <section class="step-content active">
+                <h1>How much time can you spend creating your course per week?</h1>
+                <p>There's no wrong answer. We can help you achieve your goals even if you don't have much time.</p>
+                <div class="time-options">
+                    <label><input type="radio" name="time" checked={{eq this.timeCommitment "0-2" }} {{on "change" (fn
+                            this.setTime "0-2" )}} /> I’m very busy right now (0-2 hours)</label>
+                    <label><input type="radio" name="time" checked={{eq this.timeCommitment "2-4" }} {{on "change" (fn
+                            this.setTime "2-4" )}} /> I’ll work on this on the side (2-4 hours)</label>
+                    <label><input type="radio" name="time" checked={{eq this.timeCommitment "5+" }} {{on "change" (fn
+                            this.setTime "5+" )}} /> I have lots of flexibility (5+ hours)</label>
+                    <label><input type="radio" name="time" checked={{eq this.timeCommitment "haven't_decided" }}
+                            {{on "change" (fn this.setTime "haven't_decided" )}} /> I haven’t yet decided if I have
+                        time</label>
+                </div>
+
+                <div class="action-btns">
+                    <button type="button" class="previous-btn" {{on "click" (fn this.previousStep 4)}}>Previous</button>
+                    <button type="button" class="finish-btn" {{on "click" this.submitCourseData}}>Create Course</button>
+                </div>
+            </section>
+            {{/if}}
+        </main>
+    </div>
+</div>

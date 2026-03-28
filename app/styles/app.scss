@@ -1,0 +1,36 @@
+// ============================================
+// app.scss — Main entry point
+// ============================================
+
+// External
+@import "bootstrap";
+
+// Base
+@import "base/variables";
+@import "base/reset";
+@import "base/typography";
+
+// Layout
+@import "layout/layout";
+@import "layout/header";
+
+// Components
+@import "components/buttons";
+@import "components/course-card";
+@import "components/notification";
+@import "components/loading-spinner";
+
+// Pages
+@import "pages/home";
+@import "pages/login";
+@import "pages/dashboard";
+@import "pages/mylearning";
+@import "pages/view-course";
+@import "pages/instructor-dashboard";
+@import "pages/create-course";
+@import "pages/enrollment";
+
+// Global utility
+.main-content {
+    padding: 0px;
+}

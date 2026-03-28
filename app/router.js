@@ -15,5 +15,10 @@ Router.map(function () {
     this.route('dashboard');
     this.route('mylearning');
     this.route('view-course', { path: '/view-course/:course_id' });
+    this.route('instructor', function () {
+      this.route('dashboard');
+      this.route('enrollment-steps');
+      this.route('create-course', { path: '/create-course/:course_id' });
+    });
   });
 });

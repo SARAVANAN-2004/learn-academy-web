@@ -1,0 +1,147 @@
+// ============================================
+// Shared Sidebar + Main Content Layout
+// Extracted from MainCoursePage.css
+// ============================================
+@import "../base/variables";
+
+.instructor-layout {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 240px;
+    min-width: 240px;
+    max-width: 240px;
+    background: $white;
+    padding: 25px 20px;
+    border-right: 1px solid $gray-200;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.04);
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    ul li {
+        margin-bottom: 10px;
+        opacity: 0;
+        transform: translateX(-10px);
+        animation: slideIn 0.4s ease forwards;
+
+        &:nth-child(1) {
+            animation-delay: 0.05s;
+        }
+
+        &:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        &:nth-child(3) {
+            animation-delay: 0.15s;
+        }
+
+        &:nth-child(4) {
+            animation-delay: 0.2s;
+        }
+
+        &:nth-child(5) {
+            animation-delay: 0.25s;
+        }
+
+        a,
+        button {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: $radius-md;
+            font-size: 15px;
+            font-weight: 500;
+            color: $gray-700;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+
+            &:hover {
+                background: $indigo-hover;
+                color: $indigo;
+                transform: translateX(4px);
+            }
+
+            &.active {
+                background: $indigo-hover;
+                color: $indigo-dark;
+                font-weight: 600;
+                position: relative;
+
+                &::before {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    top: 8px;
+                    bottom: 8px;
+                    width: 4px;
+                    background: $indigo-dark;
+                    border-radius: 4px;
+                }
+            }
+        }
+
+        i {
+            font-size: 16px;
+        }
+    }
+}
+
+@keyframes slideIn {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.main-content {
+    flex: 1;
+    padding: $sp-xl;
+    background: $gray-50;
+}
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 20px 25px;
+    background: transparent;
+    border-radius: $radius-lg;
+
+    h1 {
+        font-size: 28px;
+        font-weight: 700;
+        background: linear-gradient(135deg, $indigo, $violet);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+
+    .main-content {
+        padding: 20px;
+    }
+
+    .main-header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+}

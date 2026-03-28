@@ -1,0 +1,100 @@
+// ============================================
+// Course Card component — extracted from dashboard.css
+// ============================================
+@import "../base/variables";
+
+.course-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: $white;
+    border-radius: $radius-md;
+    box-shadow: $shadow-sm;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 0;
+    height: 100%;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .image-container img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+    }
+
+    .course-info {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        padding: 15px;
+
+        h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        button {
+            margin-top: auto;
+            padding: 10px;
+            border: none;
+            background: $blue;
+            color: $white;
+            cursor: pointer;
+            border-radius: $radius-sm;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+
+            &:hover {
+                background: #142b6f;
+            }
+        }
+    }
+}
+
+.instructor {
+    font-size: 14px;
+    color: gray;
+}
+
+.rating {
+    font-size: 14px;
+    margin: 5px 0;
+    color: #f39c12;
+}
+
+.price {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+.discount-price {
+    color: #e53935;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.original-price {
+    color: gray;
+    font-size: 14px;
+}
+
+.badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 5px;
+
+    span {
+        background-color: #e0e0e0;
+        color: #333;
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+    }
+}

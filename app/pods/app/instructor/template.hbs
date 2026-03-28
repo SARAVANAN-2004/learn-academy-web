@@ -1,0 +1,22 @@
+<div class="instructor-page">
+    <div class="instructor-layout">
+        <aside class="sidebar">
+            <h2>Instructor</h2>
+            <ul>
+                <li>
+                    <LinkTo @route="app.instructor.dashboard">🏠 Dashboard</LinkTo>
+                </li>
+                <li>
+                    <LinkTo @route="app.instructor.enrollment-steps">➕ Create Course</LinkTo>
+                </li>
+                <li><a href="#">📚 Courses</a></li>
+                <li><a href="#">📊 Reports</a></li>
+                <li><a href="#">⚙️ Settings</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            {{outlet}}
+        </main>
+    </div>
+</div>
