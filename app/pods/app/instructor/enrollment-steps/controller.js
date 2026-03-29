@@ -9,7 +9,6 @@ export default class EnrollmentStepsController extends Controller {
     @service router;
     @service notification;
 
-    userId = '1';
 
     @tracked currentStep = 1;
     @tracked courseType = 'Course';
@@ -88,7 +87,6 @@ export default class EnrollmentStepsController extends Controller {
             discountedPrice: parseFloat(this.discountedPrice) || 0,
             rating: parseFloat(this.rating) || 5,
             badges: this.badges ? this.badges.split(',').map(b => b.trim()) : [],
-            userId: this.userId
         };
 
         try {

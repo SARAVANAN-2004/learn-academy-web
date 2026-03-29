@@ -4,21 +4,37 @@
     <div class="logo">Learn Academy</div>
     <nav>
         <ul class="nav-links">
-            <li><a href="/app/dashboard">Explore</a></li>
-            <li>
-                <LinkTo @route="app.instructor.dashboard">Teach on Learn Academy</LinkTo>
-            </li>
-            <li><a href="/app/mylearning">My Learning</a></li>
+            <LinkTo @route="app.dashboard" class="nav-link" @activeClass="active">
+                Explore
+            </LinkTo>
+            <LinkTo @route="app.instructor.dashboard" class="nav-link" @activeClass="active">
+                Teach on Learn Academy
+            </LinkTo>
+            <LinkTo @route="app.mylearning" class="nav-link" @activeClass="active">
+                My Learning
+            </LinkTo>
         </ul>
     </nav>
-    <input type="text" class="search-bar" placeholder="Search courses..." />
+    <div class="search-container">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" class="search-bar" placeholder="Search courses..." />
+    </div>
     <div class="icons">
-        <span class="icon">🛒</span>
-        <span class="icon">🔔</span>
-        <a href="/Profile/index.html"><span class="icon">👤</span></a>
-        <button type="button" class="logout-btn"
-            style="background: none; border: none; font-size: 1.2rem; cursor: pointer; margin-left: 10px;" {{on "click"
-            this.logout}} title="Logout">🚪</button>
+        <span class="icon" data-tooltip="Cart">
+            <i class="fa-solid fa-cart-shopping"></i>
+        </span>
+
+        <span class="icon" data-tooltip="Notifications">
+            <i class="fa-regular fa-bell"></i>
+        </span>
+
+        <a href="/Profile/index.html" class="icon" data-tooltip="Profile">
+            <i class="fa-regular fa-user"></i>
+        </a>
+
+        <button type="button" class="logout-btn icon" {{on "click" this.logout}} data-tooltip="Logout">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
     </div>
 </header>
 
