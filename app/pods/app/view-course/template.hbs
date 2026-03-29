@@ -5,13 +5,16 @@
         <div class="col-md-8">
             <div class="course-header">
                 <h2>{{this.model.courseDetails.title}}</h2>
-                <p>
-                    <strong>Instructor:</strong> {{this.model.courseDetails.instructor}} |
-                    <strong>Rating:</strong> {{this.model.courseDetails.rating}} |
-                    <strong>Price:</strong> ${{this.model.courseDetails.price}}
+
+                <div class="course-meta">
+                    <span>{{this.model.courseDetails.instructor}}</span>
+                    <span>⭐ {{this.model.courseDetails.rating}}</span>
+                    <span class="price">₹{{this.model.courseDetails.price}}</span>
+                </div>
+
+                <p class="course-desc">
+                    {{this.model.courseDetails.description}}
                 </p>
-                <p>{{this.model.courseDetails.description}}</p>
-                <p><strong>Summary:</strong> {{this.model.content.summary}}</p>
             </div>
 
             <div class="video-container mt-3">
@@ -37,7 +40,7 @@
                     <h2 class="accordion-header">
                         <button class="accordion-button {{if (not-eq i 0) 'collapsed' ''}}" type="button"
                             data-bs-toggle="collapse" data-bs-target="#section{{i}}">
-                            {{section.sectionTitle}}
+                            {{section.title}}
                         </button>
                     </h2>
                     <div id="section{{i}}" class="accordion-collapse collapse {{if (eq i 0) 'show' ''}}">
@@ -46,7 +49,8 @@
                                 {{#each section.lessons as |lesson|}}
                                 <li class="list-group-item lesson lesson-item {{if (eq lesson this.currentLesson) 'active'}}"
                                     role="button" {{on "click" (action this.selectLesson lesson)}}>
-                                    <input type="checkbox"> {{lesson.title}}
+                                    <input type="checkbox" checked={{get this.progressMap lesson.lesson_id}}
+                                        {{on "change" (action this.toggleLesson lesson)}}> {{lesson.title}}
                                 </li>
                                 {{/each}}
                             </ul>

@@ -1,54 +1,139 @@
-// ============================================
-// View Course page — scoped under .view-course-page
-// Extracted from viewCourse.css
-// ============================================
 @import "../base/variables";
 
 .view-course-page {
 
     &.container-fluid {
-        padding: 30px;
+        padding: 30px 40px;
+        background: #f5f7fb;
+    }
+
+    .course-header {
+        background: #ffffff;
+        color: #222;
+        padding: 18px 20px;
+        border-radius: $radius-md;
+        border: 1px solid #e5e7eb;
+        box-shadow: none;
+        margin-bottom: 10px;
+
+        h2 {
+            font-weight: 600;
+            font-size: 22px;
+            margin-bottom: 6px;
+        }
+
+        .course-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 8px;
+
+            span {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+
+            .price {
+                color: #2563eb;
+                font-weight: 600;
+            }
+        }
+
+        .course-desc {
+            font-size: 14px;
+            color: #4b5563;
+            margin: 0;
+            line-height: 1.4;
+        }
     }
 
     .video-container {
         background: $white;
         padding: 15px;
         border-radius: $radius-md;
-        box-shadow: $shadow-sm;
-        margin-bottom: 20px;
+        box-shadow: $shadow-md;
+        margin-top: 12px;
+
+        iframe {
+            border-radius: $radius-sm;
+        }
+    }
+
+    #current-lesson-title {
+        font-weight: 600;
+        margin-top: 15px;
+    }
+
+    #lesson-resources {
+        margin-top: 8px;
+        color: #555;
+    }
+
+    h4 {
+        font-weight: 700;
+        margin-bottom: 15px;
     }
 
     .accordion {
-        background: $white;
-        border-radius: $radius-md;
-        padding: 10px;
-        box-shadow: $shadow-sm;
+        background: transparent;
+
+        .accordion-item {
+            border: none;
+            margin-bottom: 10px;
+            border-radius: $radius-md;
+            overflow: hidden;
+            box-shadow: $shadow-sm;
+        }
 
         .accordion-button {
-            background: $blue;
-            color: $white;
-            font-weight: bold;
-            border-radius: $radius-sm;
-            transition: background 0.3s ease;
+            background: $white;
+            color: #333;
+            font-weight: 600;
+            border: none;
+            padding: 14px;
 
-            &:hover {
-                background: #142b6f;
+            &:not(.collapsed) {
+                background: #eaf1ff;
+                color: $blue;
+            }
+
+            &:focus {
+                box-shadow: none;
             }
         }
 
         .accordion-body {
-            background: #f1f1f1;
-            padding: 15px;
-            border-radius: $radius-sm;
+            background: #fafafa;
+            padding: 10px;
         }
     }
 
     .list-group-item {
-        cursor: pointer;
-        transition: background 0.3s ease;
+        border: none;
+        padding: 10px 12px;
+        border-radius: $radius-sm;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        transition: all 0.2s ease;
 
         &:hover {
-            background-color: #e0e0e0;
+            background: #eef2ff;
+            transform: translateX(3px);
+        }
+
+        &.active {
+            background: #2563eb;
+            color: $white;
+        }
+
+        input[type="checkbox"] {
+            accent-color: #2563eb;
+            transform: scale(1.1);
         }
     }
 
@@ -56,51 +141,78 @@
         background: $white;
         padding: 20px;
         border-radius: $radius-md;
-        box-shadow: $shadow-sm;
+        box-shadow: $shadow-md;
     }
 
-    .nav-tabs .nav-link {
-        color: $blue;
-        font-weight: bold;
+    .nav-tabs {
+        border-bottom: none;
 
-        &.active {
-            background: $blue;
-            color: $white;
+        .nav-link {
+            border: none;
+            color: #555;
+            font-weight: 600;
+            padding: 10px 15px;
             border-radius: $radius-sm;
+
+            &:hover {
+                background: #f1f5ff;
+            }
+
+            &.active {
+                background: #2563eb;
+                color: $white;
+            }
         }
     }
 
     .tab-content {
-        padding: 15px;
-        background-color: #f8f9fa;
+        padding: 20px;
+        background-color: #f9fafc;
         border-radius: $radius-sm;
+        margin-top: 10px;
     }
 
     textarea {
         width: 100%;
-        min-height: 100px;
-        padding: 10px;
+        min-height: 120px;
+        padding: 12px;
         border-radius: $radius-sm;
-        border: 1px solid #ccc;
+        border: 1px solid #ddd;
+        transition: all 0.2s ease;
+
+        &:focus {
+            border-color: #2563eb;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+        }
     }
 
     .btn-primary {
-        background: $blue;
+        background: linear-gradient(135deg, #2563eb, #1e40af);
         border: none;
-        padding: 10px;
-        font-size: 16px;
-        font-weight: bold;
+        padding: 10px 18px;
+        font-size: 15px;
+        font-weight: 600;
         border-radius: $radius-sm;
-        transition: background 0.3s ease;
+        transition: all 0.2s ease;
 
         &:hover {
-            background: #142b6f;
+            transform: translateY(-1px);
+            box-shadow: $shadow-md;
         }
     }
 
     @media (max-width: 768px) {
-        .container-fluid {
-            padding: 10px;
+        &.container-fluid {
+            padding: 15px;
+        }
+
+        .course-header {
+            padding: 15px;
+        }
+
+        iframe {
+            height: 220px;
         }
     }
 }

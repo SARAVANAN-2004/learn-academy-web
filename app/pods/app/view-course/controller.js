@@ -6,6 +6,15 @@ import { apiRequest } from 'learn-academy-web/utils/api';
 
 export default class ViewCourseController extends Controller {
     @tracked currentLesson = null;
+    @tracked progress = [];
+
+    get progressMap() {
+        let map = {};
+        this.progress.forEach(p => {
+            map[p.lesson_id] = p.completed;
+        });
+        return map;
+    }
 
     get embedVideoUrl() {
         if (!this.currentLesson || !this.currentLesson.video) return '';
@@ -37,6 +46,36 @@ export default class ViewCourseController extends Controller {
         setTimeout(() => {
             this.currentLesson = lesson;
         }, 0);
+    }
+
+    isLessonCompleted(lessonId) {
+        return this.progress.some(p => p.lesson_id === lessonId && p.completed);
+    }
+
+    @action
+    async toggleLesson(lesson, event) {
+        let checked = event.target.checked;
+        let lessonId = lesson.lesson_id;
+
+        if (checked) {
+            this.progress = [...this.progress, { lesson_id: lessonId, completed: true }];
+        } else {
+            this.progress = this.progress.filter(p => p.lesson_id !== lessonId);
+        }
+
+        try {
+            await apiRequest('/api/toggle-lesson', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    courseId: this.model.courseDetails.id,
+                    lessonId: lessonId,
+                    completed: checked
+                })
+            });
+        } catch (e) {
+            console.error('API Error:', e);
+        }
     }
 
     @action

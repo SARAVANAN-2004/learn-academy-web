@@ -9,19 +9,25 @@ export default class ViewCourseRoute extends Route {
         let data = await res.json();
         let parsedContent = { sections: [] };
         try {
-            parsedContent = data.courseContent && data.courseContent.content ? JSON.parse(data.courseContent.content) : { sections: [] };
+            if (data.courseContent && data.courseContent.content) {
+                let parsed = JSON.parse(data.courseContent.content);
+                parsedContent = Array.isArray(parsed) ? { sections: parsed } : parsed;
+            }
         } catch (e) {
             console.error("Error parsing course content JSON", e);
         }
 
         return {
             courseDetails: data.courseDetails,
-            content: parsedContent
+            content: parsedContent,
+            progress: data.progress || []
         };
     }
 
     setupController(controller, model) {
         super.setupController(controller, model);
+
+        controller.progress = model.progress || [];
 
         // Initialize the controller with the first lesson's content
         if (model.content?.sections?.length > 0 && model.content.sections[0].lessons?.length > 0) {
