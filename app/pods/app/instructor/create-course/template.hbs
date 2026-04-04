@@ -7,7 +7,7 @@
             {{#each this.sections key="@index" as |section sIndex|}}
             <div class="section">
                 <h2>Section {{sIndex}}</h2>
-                <input type="text" id="section-title-{{sIndex}}" name="section-title-{{sIndex}}"
+                <input type="text" id="section-title-{{sIndex}}" name="section-title-{{sIndex}}" value={{section.title}}
                     placeholder="Section Title" class="section-title" {{on "input" (fn this.updateSectionTitle
                     sIndex)}}><br>
 
@@ -18,12 +18,13 @@
                     {{#each section.lessons key="@index" as |lesson lIndex|}}
                     <div class="lesson">
                         <input type="text" id="lesson-title-{{sIndex}}-{{lIndex}}"
-                            name="lesson-title-{{sIndex}}-{{lIndex}}" placeholder="Lesson Title" class="lesson-title"
-                            {{on "input" (fn this.updateLesson sIndex lIndex "title" )}}>
+                            name="lesson-title-{{sIndex}}-{{lIndex}}" value={{lesson.title}} placeholder="Lesson Title"
+                            class="lesson-title" {{on "input" (fn this.updateLesson sIndex lIndex "title" )}}>
 
                         <input type="text" id="lesson-video-{{sIndex}}-{{lIndex}}"
-                            name="lesson-video-{{sIndex}}-{{lIndex}}" placeholder="YouTube Video URL"
-                            class="lesson-video" {{on "input" (fn this.updateLesson sIndex lIndex "video" )}}>
+                            name="lesson-video-{{sIndex}}-{{lIndex}}" value={{lesson.video}}
+                            placeholder="YouTube Video URL" class="lesson-video" {{on "input" (fn this.updateLesson
+                            sIndex lIndex "video" )}}>
 
                         <div class="video-preview">
                             {{#if lesson.videoEmbed}}
@@ -33,9 +34,9 @@
                         </div>
 
                         <textarea id="lesson-resources-{{sIndex}}-{{lIndex}}"
-                            name="lesson-resources-{{sIndex}}-{{lIndex}}" placeholder="Add Resources (optional)"
-                            class="lesson-resources" rows="2" {{on "input" (fn this.updateLesson sIndex
-                            lIndex "resources" )}}></textarea>
+                            name="lesson-resources-{{sIndex}}-{{lIndex}}" value={{lesson.resources}}
+                            placeholder="Add Resources (optional)" class="lesson-resources" rows="2" {{on "input" (fn
+                            this.updateLesson sIndex lIndex "resources" )}}></textarea>
                     </div>
                     {{/each}}
                 </div>
@@ -45,8 +46,8 @@
 
         <div class="summary">
             <h3>Course Summary</h3>
-            <textarea id="courseSummary" name="courseSummary" rows="4" placeholder="Write a summary of the course..."
-                {{on "input" this.updateSummary}}></textarea>
+            <textarea id="courseSummary" name="courseSummary" rows="4" value={{this.summary}}
+                placeholder="Write a summary of the course..." {{on "input" this.updateSummary}}></textarea>
         </div>
 
         <button type="button" class="submit-btn" {{on "click" this.submitCourse}}>Submit Course</button>

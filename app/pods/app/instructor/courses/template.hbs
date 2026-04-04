@@ -1,0 +1,164 @@
+<div class="instructor-courses-page">
+    <div class="page-header">
+        <h1>Courses</h1>
+        <div class="header-actions">
+            <LinkTo @route="app.instructor.create-course" @model="new" class="btn btn-primary">
+                <i class="fa-solid fa-plus"></i> New Course
+            </LinkTo>
+        </div>
+    </div>
+
+    {{#if this.notification}}
+    <div class="notification-toast {{this.notification.type}}">
+        {{#if (eq this.notification.type "success")}}
+        <i class="fa-solid fa-circle-check"></i>
+        {{else}}
+        <i class="fa-solid fa-circle-exclamation"></i>
+        {{/if}}
+        <span>{{this.notification.message}}</span>
+        <button type="button" class="btn-icon"
+            style="background:none;border:none;color:inherit;cursor:pointer;margin-left:8px;" {{on "click"
+            this.dismissNotification}}>
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+    {{/if}}
+
+    {{#if this.coursesWithSelection.length}}
+    <div class="sticky-toolbar">
+        <div class="selection-info">
+            <input type="checkbox" class="custom-checkbox" checked={{this.allSelected}} {{on "change"
+                this.toggleSelectAll}}>
+            {{#if this.selectedCourses.length}}
+            <span class="badge">{{this.selectedCourses.length}} selected</span>
+            {{else}}
+            <span>Select courses</span>
+            {{/if}}
+        </div>
+
+        {{#if this.selectedCourses.length}}
+        <div class="bulk-actions">
+            <div class="action-menu d-inline-block" style="position: relative;">
+                <button type="button" class="btn btn-export" {{on "click" (fn this.toggleDropdown "export" )}}>
+                    {{#if this.isExporting}}
+                    <i class="fa-solid fa-spinner spinner"></i> Compiling...
+                    {{else}}
+                    <i class="fa-solid fa-download"></i> Export <i class="fa-solid fa-chevron-down"
+                        style="font-size:0.75rem;"></i>
+                    {{/if}}
+                </button>
+                {{#if (eq this.openDropdownId "export")}}
+                <div class="dropdown-content">
+                    <button type="button" {{on "click" (fn this.exportCourses "csv" )}}>
+                        <i class="fa-solid fa-file-csv"></i> Export as CSV
+                    </button>
+                    <button type="button" {{on "click" (fn this.exportCourses "xlsx" )}}>
+                        <i class="fa-solid fa-file-excel"></i> Export as XLSX
+                    </button>
+                    <button type="button" {{on "click" (fn this.exportCourses "pdf" )}}>
+                        <i class="fa-solid fa-file-pdf"></i> Export as PDF
+                    </button>
+                </div>
+                {{/if}}
+            </div>
+
+            <button type="button" class="btn btn-bulk-delete" {{on "click" this.bulkDelete}}
+                disabled={{this.isDeleting}}>
+                {{#if this.isDeleting}}
+                <i class="fa-solid fa-spinner spinner"></i> Deleting...
+                {{else}}
+                <i class="fa-solid fa-trash-can"></i> Bulk Delete
+                {{/if}}
+            </button>
+        </div>
+        {{/if}}
+    </div>
+
+    <div class="courses-table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-checkbox"></th>
+                    <th>Course</th>
+                    <th>Badges</th>
+                    <th>Stats</th>
+                    <th>Created</th>
+                    <th style="width: 60px;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each this.coursesWithSelection as |course|}}
+                <tr class="{{if course.isSelected 'selected'}}">
+                    <td class="col-checkbox">
+                        <input type="checkbox" class="custom-checkbox" checked={{course.isSelected}} {{on "change" (fn
+                            this.toggleSelection course.id)}}>
+                    </td>
+                    <td>
+                        <div class="course-meta">
+                            <div class="title">{{if course.title course.title "Untitled Course"}}</div>
+                            <div class="category">{{if course.category course.category "Uncategorized"}}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="course-badges">
+                            {{#each course.badges as |badge|}}
+                            <span class="badge-tag {{badge.status}}">{{badge.name}}</span>
+                            {{/each}}
+                            {{#unless course.badges}}
+                            <span class="badge-tag draft">Draft</span>
+                            {{/unless}}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="course-stats">
+                            <span title="Students"><i class="fa-solid fa-users"></i> {{if course.studentCount
+                                course.studentCount 0}}</span>
+                            <span title="Lessons"><i class="fa-solid fa-book-open"></i> {{if course.lessonCount
+                                course.lessonCount 0}}</span>
+                            {{#if course.completedLessonCount}}
+                            <span title="Completed Lessons"><i class="fa-solid fa-check-circle"
+                                    style="color:var(--green)"></i> {{course.completedLessonCount}}</span>
+                            {{/if}}
+                        </div>
+                    </td>
+                    <td style="color:#6b7280; font-size: 0.9rem;">
+                        {{if course.createdAt course.createdAt "Recently"}}
+                    </td>
+                    <td>
+                        <div class="action-menu">
+                            <button type="button" class="btn-icon" {{on "click" (fn this.toggleDropdown course.id)}}>
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                            </button>
+                            {{#if (eq this.openDropdownId course.id)}}
+                            <div class="dropdown-content">
+                                <LinkTo @route="app.instructor.enrollment-steps" @model={{course.id}}>
+                                    <i class="fa-solid fa-pen"></i> Edit Details
+                                </LinkTo>
+                                <LinkTo @route="app.instructor.create-course" @model={{course.id}}>
+                                    <i class="fa-solid fa-list-check"></i> Edit Content
+                                </LinkTo>
+                                <button type="button" class="action-delete" {{on "click" (fn this.deleteSingle
+                                    course.id)}}>
+                                    <i class="fa-solid fa-trash-can"></i> Delete
+                                </button>
+                            </div>
+                            {{/if}}
+                        </div>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+
+    {{else}}
+    <div class="empty-state">
+        <i class="empty-icon fa-solid fa-folder-open"></i>
+        <h3>No Courses Found</h3>
+        <p>You haven't created any courses yet. Get started by creating your first course!</p>
+        <LinkTo @route="app.instructor.create-course" @model="new" class="btn btn-primary" style="margin-top: 16px;">
+            <i class="fa-solid fa-plus"></i> Create Course
+        </LinkTo>
+    </div>
+    {{/if}}
+</div>

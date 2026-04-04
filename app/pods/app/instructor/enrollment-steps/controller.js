@@ -90,24 +90,38 @@ export default class EnrollmentStepsController extends Controller {
         };
 
         try {
-            let res = await apiRequest('/api/create-course', {
-                method: 'POST',
+            let endpoint = '/api/create-course';
+            let method = 'POST';
+
+            if (!this.isNew) {
+                endpoint = `/api/instructor/courses/${this.courseId}`;
+                method = 'PUT';
+            }
+
+            let res = await apiRequest(endpoint, {
+                method: method,
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(courseData)
             });
-            let data = await res.json();
 
-            if (data.success) {
-                this.notification.success("Course created successfully!");
-                let cId = data.courseId || data.course_id || data.id || data.course?.id || 'new';
-                this.router.transitionTo('app.instructor.create-course', cId);
+            if (res.ok) {
+                this.notification.success(this.isNew ? "Course created successfully!" : "Course updated successfully!");
+                if (this.isNew) {
+                    let data = await res.json().catch(() => ({}));
+                    let cId = data.courseId || data.course_id || data.id || data.course?.id || 'new';
+                    this.router.transitionTo('app.instructor.create-course', cId);
+                } else {
+                    this.router.transitionTo('app.instructor.courses');
+                }
             } else {
-                this.notification.error("Error: " + (data.message || "Something went wrong"));
+                let data = await res.json().catch(() => ({}));
+                this.notification.error("Error: " + (data.message || "Failed to save course data."));
             }
         } catch (e) {
-            this.notification.error("Failed to create course.");
+            this.notification.error("Failed to process course action.");
+            console.error(e);
         }
     }
 }

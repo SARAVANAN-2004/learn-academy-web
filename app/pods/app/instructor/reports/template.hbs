@@ -1,0 +1,159 @@
+<div class="instructor-reports-page">
+    <div class="toolbar">
+        <div class="search-wrapper">
+            <i>🔍</i>
+            <input type="text" placeholder="Search by course or category..." value={{this.searchQuery}} {{on "input" (fn
+                this.updateSearch)}} />
+        </div>
+
+        <div class="toolbar-actions">
+            <span class="selection-info">
+                {{#if this.allSelected}}All Selected{{else}}Select courses to export{{/if}}
+            </span>
+            <div class="action-menu">
+                <button type="button" class="btn btn-export" disabled={{this.isExporting}}>
+                    {{#if this.isExporting}}
+                    <span class="spinner">⏳</span> Exporting...
+                    {{else}}
+                    Export As ▼
+                    {{/if}}
+                </button>
+                <div class="dropdown-content">
+                    <button type="button" {{on "click" (fn this.exportReport "csv" )}}>Export CSV</button>
+                    <button type="button" {{on "click" (fn this.exportReport "xlsx" )}}>Export XLSX</button>
+                    <button type="button" {{on "click" (fn this.exportReport "pdf" )}}>Export PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="reports-table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 40px; text-align: center;">
+                        <input type="checkbox" class="custom-checkbox" checked={{this.allSelected}} {{on "change"
+                            this.toggleSelectAll}}>
+                    </th>
+                    <th style="width: 40px;"></th> <!-- Expand arrow -->
+                    <th>Course Name</th>
+                    <th>Category</th>
+                    <th>Created Date</th>
+                    <th style="text-align: center;">Enrolled Users</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#if (eq this.filteredCourses.length 0)}}
+                <tr>
+                    <td colspan="6">
+                        <div class="empty-state">
+                            <span class="empty-icon">📊</span>
+                            <h3>No courses to report!</h3>
+                        </div>
+                    </td>
+                </tr>
+                {{/if}}
+
+                {{#each this.filteredCourses as |wrapper|}}
+                <tr class="parent-row {{if wrapper.isExpanded 'expanded'}}" {{on "click" (fn this.toggleRow wrapper)}}>
+                    <td style="text-align: center;" {{on "click" this.stopPropagation}}>
+                        <input type="checkbox" class="custom-checkbox" checked={{wrapper.isSelected}} {{on "change" (fn
+                            this.toggleCourseSelection wrapper)}}>
+                    </td>
+                    <td style="text-align: center; color: #9ca3af;">
+                        <span class="expand-icon">▶</span>
+                    </td>
+                    <td>
+                        <div class="course-title">{{wrapper.course.courseName}}</div>
+                    </td>
+                    <td><span class="badge">{{wrapper.course.courseCategory}}</span></td>
+                    <td style="color: #6b7280; font-size: 0.9rem;">{{wrapper.course.createdAt}}</td>
+                    <td style="text-align: center; font-weight: 700; color: #4f46e5;">{{wrapper.enrolledUsers.length}}
+                    </td>
+                </tr>
+
+                {{#if wrapper.isExpanded}}
+                <tr class="nested-row">
+                    <td colspan="6">
+                        <div class="nested-container">
+                            {{#if (eq wrapper.enrolledUsers.length 0)}}
+                            <h4 style="color: #6b7280; font-style: italic;">No users enrolled inside this course yet.
+                            </h4>
+                            {{else}}
+                            <h4>Enrolled Users</h4>
+                            <table class="nested-table">
+                                <thead>
+                                    <tr>
+                                        <th>Student Information</th>
+                                        <th>Enrolled At</th>
+                                        <th style="text-align: center;">Overall Progress</th>
+
+                                        <!-- Dynamic Sections -->
+                                        {{#each wrapper.sectionHeaders as |section sIndex|}}
+                                        <th style="text-align: center;" title={{section.sectionTitle}}>
+                                            Sec {{sIndex}}: Total <br /> ({{section.totalLessons}})
+                                        </th>
+                                        <th style="text-align: center;" title={{section.sectionTitle}}>
+                                            Sec {{sIndex}}: Done
+                                        </th>
+                                        {{/each}}
+
+                                        <th style="text-align: right;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each wrapper.enrolledUsers as |userWrap|}}
+                                    <tr>
+                                        <td>
+                                            <div class="user-meta">
+                                                <div class="name">{{userWrap.user.userName}}</div>
+                                                <div class="email">{{userWrap.user.userEmail}}</div>
+                                            </div>
+                                        </td>
+                                        <td style="color: #6b7280;">{{userWrap.user.enrolledAt}}</td>
+
+                                        <td style="text-align: center;">
+                                            <span
+                                                class="completion-badge {{if (gt userWrap.completionRatio 70) 'high' (if (lt userWrap.completionRatio 30) 'low' 'medium')}}">
+                                                {{userWrap.completionRatio}}%
+                                            </span>
+                                        </td>
+
+                                        {{#each userWrap.user.sections as |userSec|}}
+                                        <td style="text-align: center; color: #4b5563;">{{userSec.totalLessons}}</td>
+                                        <td
+                                            style="text-align: center; font-weight: 700; color: {{if (eq userSec.completedLessons userSec.totalLessons) '#16a34a' '#d97706'}};">
+                                            {{userSec.completedLessons}}
+                                        </td>
+                                        {{/each}}
+
+                                        <td style="text-align: right;">
+                                            <button type="button" class="btn btn-icon-danger"
+                                                style="color: #ef4444; background: #fee2e2; padding: 4px 10px; font-size: 0.8rem;"
+                                                title="Evict User" {{on "click" (fn this.removeUser wrapper userWrap)}}>
+                                                🗑
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                            {{/if}}
+                        </div>
+                    </td>
+                </tr>
+                {{/if}}
+                {{/each}}
+
+            </tbody>
+        </table>
+    </div>
+
+    {{#if this.notification}}
+    <div class="notification-toast {{this.notification.type}}">
+        <span>{{this.notification.message}}</span>
+        <button type="button" style="background: none; border: none; font-size: 1.2rem; cursor: pointer;" {{on "click"
+            this.dismissNotification}}>×</button>
+    </div>
+    {{/if}}
+</div>

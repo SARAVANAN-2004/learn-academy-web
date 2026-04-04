@@ -28,9 +28,9 @@
             <i class="fa-regular fa-bell"></i>
         </span>
 
-        <a href="/Profile/index.html" class="icon" data-tooltip="Profile">
+        <LinkTo @route="app.profile" class="icon" data-tooltip="Profile">
             <i class="fa-regular fa-user"></i>
-        </a>
+        </LinkTo>
 
         <button type="button" class="logout-btn icon" {{on "click" this.logout}} data-tooltip="Logout">
             <i class="fa-solid fa-right-from-bracket"></i>

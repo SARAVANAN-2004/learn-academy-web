@@ -1,0 +1,258 @@
+<div class="profile-page">
+    <div class="profile-header">
+        <h1>My Profile</h1>
+        <p>Manage your account settings and personal information.</p>
+    </div>
+
+    {{#if this.notification}}
+    <div class="alert alert-{{if (eq this.notification.type 'error') 'danger' 'success'}} alert-dismissible fade show"
+        role="alert" style="margin-bottom: 2rem;">
+        {{this.notification.message}}
+        <button type="button" class="btn-close" aria-label="Close" {{on "click" this.dismissNotification}}></button>
+    </div>
+    {{/if}}
+
+    <form {{on "submit" this.saveProfile}}>
+        <div class="profile-card">
+            <div class="card-header">
+                <h2>
+                    <i class="fa-solid fa-user"></i>
+                    Personal Information
+                </h2>
+            </div>
+            <div class="card-body">
+
+                <div class="avatar-section">
+                    <div class="avatar-wrapper">
+                        {{#if this.model.profileImageUrl}}
+                        <img src={{this.model.profileImageUrl}} alt="Profile avatar">
+                        {{else}}
+                        <div class="avatar-placeholder">{{this.initials}}</div>
+                        {{/if}}
+                    </div>
+                    <div class="avatar-info">
+                        <div class="name">{{this.fullName}}</div>
+                        <div class="email">
+                            <i class="fa-solid fa-envelope"></i>
+                            {{this.model.email}}
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-title">
+                    <i class="fa-solid fa-id-card"></i>
+                    Basic Details
+                </h3>
+
+                <div class="profile-grid">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        {{#if this.isEditing}}
+                        <input type="text" id="firstName" value={{this.formData.firstName}} {{on "input" (fn
+                            this.updateField "firstName" )}} placeholder="e.g. Jane" required>
+                        {{else}}
+                        <div class="field-value {{unless this.model.firstName 'empty-value'}}">
+                            {{if this.model.firstName this.model.firstName "Not set"}}
+                        </div>
+                        {{/if}}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        {{#if this.isEditing}}
+                        <input type="text" id="lastName" value={{this.formData.lastName}} {{on "input" (fn
+                            this.updateField "lastName" )}} placeholder="e.g. Doe" required>
+                        {{else}}
+                        <div class="field-value {{unless this.model.lastName 'empty-value'}}">
+                            {{if this.model.lastName this.model.lastName "Not set"}}
+                        </div>
+                        {{/if}}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        {{#if this.isEditing}}
+                        <input type="email" id="email" value={{this.model.email}} disabled
+                            title="Email cannot be changed">
+                        {{else}}
+                        <div class="field-value">
+                            {{this.model.email}}
+                        </div>
+                        {{/if}}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone Number</label>
+                        {{#if this.isEditing}}
+                        <input type="tel" id="phoneNumber" value={{this.formData.phoneNumber}} {{on "input" (fn
+                            this.updateField "phoneNumber" )}} placeholder="+1 (555) 000-0000">
+                        {{else}}
+                        <div class="field-value {{unless this.model.phoneNumber 'empty-value'}}">
+                            {{if this.model.phoneNumber this.model.phoneNumber "Not set"}}
+                        </div>
+                        {{/if}}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dateOfBirth">Date of Birth</label>
+                        {{#if this.isEditing}}
+                        <input type="date" id="dateOfBirth" value={{this.formData.dateOfBirth}} {{on "input" (fn
+                            this.updateField "dateOfBirth" )}}>
+                        {{else}}
+                        <div class="field-value {{unless this.model.dateOfBirth 'empty-value'}}">
+                            {{if this.model.dateOfBirth this.model.dateOfBirth "Not set"}}
+                        </div>
+                        {{/if}}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        {{#if this.isEditing}}
+                        <select id="gender" {{on "change" (fn this.updateField "gender" )}}>
+                            <option value="" selected={{eq this.formData.gender "" }}>Select...</option>
+                            <option value="male" selected={{eq this.formData.gender "male" }}>Male</option>
+                            <option value="female" selected={{eq this.formData.gender "female" }}>Female</option>
+                            <option value="other" selected={{eq this.formData.gender "other" }}>Other</option>
+                            <option value="prefer_not_to_say" selected={{eq this.formData.gender "prefer_not_to_say" }}>
+                                Prefer not to say</option>
+                        </select>
+                        {{else}}
+                        <div class="field-value {{unless this.model.gender 'empty-value'}}">
+                            {{if this.model.gender this.model.gender "Not set"}}
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+
+                <h3 class="section-title">
+                    <i class="fa-solid fa-address-book"></i>
+                    Address
+                </h3>
+                <div class="profile-grid">
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label for="addressLine1">Address Line 1</label>
+                        {{#if this.isEditing}}
+                        <input type="text" id="addressLine1" value={{this.formData.addressLine1}} {{on "input" (fn
+                            this.updateField "addressLine1" )}} placeholder="123 Main St">
+                        {{else}}
+                        <div class="field-value {{unless this.model.addressLine1 'empty-value'}}">
+                            {{if this.model.addressLine1 this.model.addressLine1 "Not set"}}
+                        </div>
+                        {{/if}}
+                    </div>
+
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label for="addressLine2">Address Line 2</label>
+                        {{#if this.isEditing}}
+                        <input type="text" id="addressLine2" value={{this.formData.addressLine2}} {{on "input" (fn
+                            this.updateField "addressLine2" )}} placeholder="Apt 4B">
+                        {{else}}
+                        <div class="field-value {{unless this.model.addressLine2 'empty-value'}}">
+                            {{if this.model.addressLine2 this.model.addressLine2 "Not set"}}
+                        </div>
+                        {{/if}}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        {{#if this.isEditing}}
+                        <input type="text" id="city" value={{this.formData.city}} {{on "input" (fn
+                            this.updateField "city" )}} placeholder="New York">
+                        {{else}}
+                        <div class="field-value {{unless this.model.city 'empty-value'}}">
+                            {{if this.model.city this.model.city "Not set"}}
+                        </div>
+                        {{/if}}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="state">State / Province</label>
+                        {{#if this.isEditing}}
+                        <input type="text" id="state" value={{this.formData.state}} {{on "input" (fn
+                            this.updateField "state" )}} placeholder="NY">
+                        {{else}}
+                        <div class="field-value {{unless this.model.state 'empty-value'}}">
+                            {{if this.model.state this.model.state "Not set"}}
+                        </div>
+                        {{/if}}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        {{#if this.isEditing}}
+                        <input type="text" id="country" value={{this.formData.country}} {{on "input" (fn
+                            this.updateField "country" )}} placeholder="United States">
+                        {{else}}
+                        <div class="field-value {{unless this.model.country 'empty-value'}}">
+                            {{if this.model.country this.model.country "Not set"}}
+                        </div>
+                        {{/if}}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="postalCode">Postal / Zip Code</label>
+                        {{#if this.isEditing}}
+                        <input type="text" id="postalCode" value={{this.formData.postalCode}} {{on "input" (fn
+                            this.updateField "postalCode" )}} placeholder="10001">
+                        {{else}}
+                        <div class="field-value {{unless this.model.postalCode 'empty-value'}}">
+                            {{if this.model.postalCode this.model.postalCode "Not set"}}
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+
+                <h3 class="section-title">
+                    <i class="fa-solid fa-file-lines"></i>
+                    Bio & Avatar
+                </h3>
+                <div class="profile-grid">
+                    <div class="form-group">
+                        <label for="profileImageUrl">Profile Image URL</label>
+                        {{#if this.isEditing}}
+                        <input type="url" id="profileImageUrl" value={{this.formData.profileImageUrl}} {{on "input" (fn
+                            this.updateField "profileImageUrl" )}} placeholder="https://example.com/avatar.jpg">
+                        {{else}}
+                        <div class="field-value {{unless this.model.profileImageUrl 'empty-value'}}">
+                            {{if this.model.profileImageUrl this.model.profileImageUrl "Not set"}}
+                        </div>
+                        {{/if}}
+                    </div>
+
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label for="bio">Biography</label>
+                        {{#if this.isEditing}}
+                        <textarea id="bio" {{on "input" (fn this.updateField "bio" )}}
+                            placeholder="Tell us about yourself...">{{this.formData.bio}}</textarea>
+                        {{else}}
+                        <div class="field-value {{unless this.model.bio 'empty-value'}}">
+                            {{if this.model.bio this.model.bio "Not set"}}
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    {{#if this.isEditing}}
+                    <button type="button" class="btn btn-cancel" {{on "click" this.cancelEdit}}
+                        disabled={{this.isSaving}}>
+                        <i class="fa-solid fa-xmark"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-save" disabled={{this.isSaving}}>
+                        {{#if this.isSaving}}
+                        <i class="fa-solid fa-spinner spinner"></i> Saving...
+                        {{else}}
+                        <i class="fa-solid fa-check"></i> Save Changes
+                        {{/if}}
+                    </button>
+                    {{else}}
+                    <button type="button" class="btn btn-edit" {{on "click" this.toggleEdit}}>
+                        <i class="fa-solid fa-pen"></i> Edit Profile
+                    </button>
+                    {{/if}}
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>

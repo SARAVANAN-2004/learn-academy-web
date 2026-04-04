@@ -14,11 +14,14 @@ Router.map(function () {
   this.route('app', function () {
     this.route('dashboard');
     this.route('mylearning');
+    this.route('profile');
     this.route('view-course', { path: '/view-course/:course_id' });
     this.route('instructor', function () {
       this.route('dashboard');
-      this.route('enrollment-steps');
+      this.route('enrollment-steps', { path: '/enrollment-steps/:course_id' });
       this.route('create-course', { path: '/create-course/:course_id' });
+      this.route('courses');
+      this.route('reports');
     });
   });
 });

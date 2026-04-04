@@ -75,19 +75,32 @@ export default class CreateCourseController extends Controller {
 
     @action
     async submitCourse() {
-        const courseId = Number(this.model.courseId);
+        const courseId = Number(this.courseId);
 
         try {
-            let res = await apiRequest('/api/create-course-content', {
-                method: 'POST',
+            let endpoint = '/api/create-course-content';
+            let method = 'POST';
+
+            if (!this.isNew) {
+                endpoint = `/api/instructor/courses/${this.courseId}/content`;
+                method = 'PUT';
+            }
+
+            let res = await apiRequest(endpoint, {
+                method: method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ courseId, summary: this.summary, sections: this.sections })
             });
-            let data = await res.json();
-            if (data.success) {
-                this.notification.success("Course content uploaded!");
-                this.router.transitionTo('app.instructor.dashboard');
+
+            if (res.ok) {
+                this.notification.success("Course content saved!");
+                if (this.isNew) {
+                    this.router.transitionTo('app.instructor.dashboard');
+                } else {
+                    this.router.transitionTo('app.instructor.courses');
+                }
             } else {
+                let data = await res.json().catch(() => ({}));
                 this.notification.error(data.message || "Failed to upload content.");
             }
         } catch (e) {

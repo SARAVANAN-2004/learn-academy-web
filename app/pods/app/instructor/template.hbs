@@ -7,10 +7,14 @@
                     <LinkTo @route="app.instructor.dashboard">🏠 Dashboard</LinkTo>
                 </li>
                 <li>
-                    <LinkTo @route="app.instructor.enrollment-steps">➕ Create Course</LinkTo>
+                    <LinkTo @route="app.instructor.enrollment-steps" @model="new">➕ Create Course</LinkTo>
                 </li>
-                <li><a href="#">📚 Courses</a></li>
-                <li><a href="#">📊 Reports</a></li>
+                <li>
+                    <LinkTo @route="app.instructor.courses">📚 Courses</LinkTo>
+                </li>
+                <li>
+                    <LinkTo @route="app.instructor.reports">📊 Reports</LinkTo>
+                </li>
                 <li><a href="#">⚙️ Settings</a></li>
             </ul>
         </aside>
