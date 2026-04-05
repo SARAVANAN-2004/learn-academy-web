@@ -19,6 +19,9 @@
 @import "components/course-card";
 @import "components/notification";
 @import "components/loading-spinner";
+@import "components/type-badge";
+@import "components/loading-skeleton";
+@import "components/export-dropdown";
 
 // Pages
 @import "pages/home";
@@ -32,6 +35,8 @@
 @import "pages/instructor-reports";
 @import "pages/create-course";
 @import "pages/enrollment";
+@import "pages/instructor-create-test";
+@import "pages/test-attempt";
 
 // Global utility
 .main-content {

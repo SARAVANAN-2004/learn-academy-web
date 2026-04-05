@@ -1,0 +1,33 @@
+<div class="course-card test-card">
+    <div class="image-container"
+        style="background: rgba(111, 66, 193, 0.05); display: flex; align-items:center; justify-content:center; min-height: 150px; border-bottom: 1px solid #eaeaea;">
+        <!-- Tests might have cover images, but if not we show an icon -->
+        {{#if @test.imageUrl}}
+        <img src={{@test.imageUrl}} alt="Test Image" />
+        {{else}}
+        <i class="fa-solid fa-clipboard-list" style="font-size: 3rem; color: #6f42c1;"></i>
+        {{/if}}
+        <div style="position: absolute; top: 10px; right: 10px;">
+            <TypeBadge @type="TEST" />
+        </div>
+    </div>
+    <div class="course-info">
+        <h3>{{@test.title}}</h3>
+        <p class="instructor">{{if @test.category @test.category "General Test"}}</p>
+
+        <div class="test-stats" style="display:flex; gap:10px; font-size: 0.85rem; color: #6b7280; margin: 10px 0;">
+            <span><i class="fa-solid fa-clock"></i> {{if @test.timeLimit @test.timeLimit "No Limit"}} mins</span>
+            <span><i class="fa-solid fa-clipboard-question"></i> {{if @test.questionCount @test.questionCount 0}}
+                Qs</span>
+        </div>
+
+        {{#if @isEnrolled}}
+        <button type="button" class="btn btn-primary" style="width: 100%; border-radius: 8px;" {{on "click"
+            this.goToTest}}>Continue</button>
+        {{else}}
+        <button type="button" class="btn btn-outline-primary"
+            style="width: 100%; border-radius: 8px; border-color: #6f42c1; color: #6f42c1;" {{on "click"
+            this.enroll}}>Enroll Test</button>
+        {{/if}}
+    </div>
+</div>

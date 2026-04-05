@@ -1,0 +1,20 @@
+<div class="create-test-sidebar">
+    <div class="sidebar-header">
+        <h3>Sections</h3>
+        <button type="button" class="btn btn-add-section" {{on "click" this.onAddSection}}>
+            + Add Section
+        </button>
+    </div>
+
+    <ul class="section-list">
+        {{#each this.sections key="id" as |section|}}
+        <li class="section-item {{if (eq section.id this.activeSectionId) 'active'}}" {{on "click" (fn
+            this.onSelectSection section.id)}}>
+            <div class="section-info">
+                <span class="section-title">{{if section.title section.title "Untitled Section"}}</span>
+                <span class="question-count">{{section.questions.length}} questions</span>
+            </div>
+        </li>
+        {{/each}}
+    </ul>
+</div>

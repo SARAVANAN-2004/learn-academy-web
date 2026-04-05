@@ -10,9 +10,22 @@ export default class MylearningRoute extends Route {
         }
     }
 
-    async model() {
-        let res = await apiRequest('/api/mylearning');
+    queryParams = {
+        type: { refreshModel: true }
+    };
+
+    async model(params) {
+        let url = '/api/mylearning';
+        if (params.type && params.type !== 'all') {
+            url += `?type=${params.type}`;
+        }
+        let res = await apiRequest(url);
         let data = await res.json();
-        return Array.isArray(data) ? data : (data.courses || []);
+        return data.items || data.courses || data.tests || [];
+    }
+
+    setupController(controller, model) {
+        super.setupController(controller, model);
+        controller.isLoading = false;
     }
 }

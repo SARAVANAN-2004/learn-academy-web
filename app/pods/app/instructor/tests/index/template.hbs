@@ -1,0 +1,184 @@
+<div class="instructor-courses-page">
+    <div class="page-header">
+        <h1>Tests</h1>
+        <div class="header-actions">
+            <!-- This action currently exists on instructor side usually as create-test -->
+            <LinkTo @route="app.instructor.create-test" class="btn btn-primary">
+                <i class="fa-solid fa-plus"></i> New Test
+            </LinkTo>
+        </div>
+    </div>
+
+    {{#if this.notification}}
+    <div class="notification-toast {{this.notification.type}}">
+        {{#if (eq this.notification.type "success")}}
+        <i class="fa-solid fa-circle-check"></i>
+        {{else}}
+        <i class="fa-solid fa-circle-exclamation"></i>
+        {{/if}}
+        <span>{{this.notification.message}}</span>
+        <button type="button" class="btn-icon"
+            style="background:none;border:none;color:inherit;cursor:pointer;margin-left:8px;" {{on "click"
+            this.dismissNotification}}>
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+    {{/if}}
+
+    {{#if this.testsWithSelection.length}}
+    <div class="sticky-toolbar">
+        <div class="selection-info">
+            <input type="checkbox" class="custom-checkbox" checked={{this.allSelected}} {{on "change"
+                this.toggleSelectAll}}>
+            {{#if this.selectedTests.length}}
+            <span class="badge">{{this.selectedTests.length}} selected</span>
+            {{else}}
+            <span>Select tests</span>
+            {{/if}}
+        </div>
+
+        {{#if this.selectedTests.length}}
+        <div class="bulk-actions" style="display:flex; gap:10px; align-items:center;">
+            <button type="button" class="btn btn-outline-danger"
+                style="color:#ef4444; border-color:#ef4444; background:transparent; padding:0.4rem 0.8rem; border-radius:4px; border:1px solid;"
+                {{on "click" this.confirmBulkDelete}}>
+                <i class="fa-solid fa-trash-can"></i> Delete Selected
+            </button>
+            <ExportDropdown @endpoint="/api/instructor/tests/export" @payload={{this.exportPayload}} />
+        </div>
+        {{/if}}
+    </div>
+
+    <div class="courses-table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-checkbox"></th>
+                    <th>Test</th>
+                    <th>Type</th>
+                    <th>Stats</th>
+                    <th>Created</th>
+                    <th style="width: 60px;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each this.testsWithSelection as |test|}}
+                <tr class="{{if test.isSelected 'selected'}}">
+                    <td class="col-checkbox">
+                        <input type="checkbox" class="custom-checkbox" checked={{test.isSelected}} {{on "change" (fn
+                            this.toggleSelection test.id)}}>
+                    </td>
+                    <td>
+                        <div class="course-meta">
+                            <div class="title">{{if test.title test.title "Untitled Test"}}</div>
+                            <div class="category">{{if test.category test.category "Uncategorized"}}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="course-badges">
+                            <span class="badge-tag"
+                                style="background:#f3e8ff; color:#6b21a8; font-weight:600;">TEST</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="course-stats">
+                            <span title="Students Enrolled"><i class="fa-solid fa-users"></i> {{if test.studentCount
+                                test.studentCount 0}} Users</span>
+                            <span title="Questions"><i class="fa-solid fa-clipboard-question"></i> {{if
+                                test.questionCount test.questionCount 0}} Qs</span>
+                        </div>
+                    </td>
+                    <td style="color:#6b7280; font-size: 0.9rem;">
+                        {{if test.createdAt test.createdAt "Recently"}}
+                    </td>
+                    <td>
+                        <div class="action-menu">
+                            <button type="button" class="btn-icon" {{on "click" (fn this.toggleDropdown test.id)}}>
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                            </button>
+                            {{#if (eq this.openDropdownId test.id)}}
+                            <div class="dropdown-content">
+                                <LinkTo @route="app.instructor.tests.view" @model={{test.id}}>
+                                    <i class="fa-solid fa-eye"></i> View Test
+                                </LinkTo>
+                                <LinkTo @route="app.instructor.create-test" @query={{hash testId=test.id}}>
+                                    <i class="fa-solid fa-pen"></i> Edit Detail & Content
+                                </LinkTo>
+                                <button type="button" class="action-delete" {{on "click" (fn this.confirmDelete test)}}>
+                                    <i class="fa-solid fa-trash-can"></i> Delete
+                                </button>
+                            </div>
+                            {{/if}}
+                        </div>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+
+    {{else}}
+    <div class="empty-state">
+        <i class="empty-icon fa-solid fa-clipboard-list" style="color:#6f42c1;"></i>
+        <h3>No Tests Found</h3>
+        <p>You haven't created any tests yet. Get started by creating your first test!</p>
+        <LinkTo @route="app.instructor.create-test" class="btn btn-primary" style="margin-top: 16px;">
+            <i class="fa-solid fa-plus"></i> Create Test
+        </LinkTo>
+    </div>
+    {{/if}}
+
+    {{!-- Delete Confirmation Modal --}}
+    {{#if this.showDeleteModal}}
+    <div class="modal-overlay"
+        style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:9999;">
+        <div class="modal-content"
+            style="background:#fff;padding:2rem;border-radius:8px;max-width:400px;width:100%;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+            <h3 style="margin-top:0;color:#111827;">Delete Test?</h3>
+            <p style="color:#4b5563;margin:1rem 0;">Are you sure you want to delete
+                <strong>{{this.testToDelete.title}}</strong>? This action cannot be undone and will remove all
+                associated user attempts and questions.
+            </p>
+            <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:2rem;">
+                <button type="button" class="btn btn-outline-secondary" {{on "click" this.cancelDelete}}>Cancel</button>
+                <button type="button" class="btn btn-danger"
+                    style="background:#ef4444;color:white;border:none;padding:0.5rem 1rem;border-radius:4px;cursor:pointer;display:flex;align-items:center;gap:6px;"
+                    {{on "click" this.executeDelete}} disabled={{this.isDeleting}}>
+                    {{#if this.isDeleting}}
+                    <i class="fa-solid fa-spinner fa-spin"></i> <span style="display:inline-block">Deleting...</span>
+                    {{else}}
+                    Delete
+                    {{/if}}
+                </button>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+
+    {{!-- Bulk Delete Modal --}}
+    {{#if this.showBulkDeleteModal}}
+    <div class="modal-overlay"
+        style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:9999;">
+        <div class="modal-content"
+            style="background:#fff;padding:2rem;border-radius:8px;max-width:400px;width:100%;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+            <h3 style="margin-top:0;color:#111827;">Delete Selected Tests?</h3>
+            <p style="color:#4b5563;margin:1rem 0;">Are you sure you want to delete
+                <strong>{{this.selectedTestIds.length}}</strong> selected tests? This action cannot be undone.
+            </p>
+            <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:2rem;">
+                <button type="button" class="btn btn-outline-secondary" {{on "click"
+                    this.cancelBulkDelete}}>Cancel</button>
+                <button type="button" class="btn btn-danger"
+                    style="background:#ef4444;color:white;border:none;padding:0.5rem 1rem;border-radius:4px;cursor:pointer;display:flex;align-items:center;gap:6px;"
+                    {{on "click" this.executeBulkDelete}} disabled={{this.isDeleting}}>
+                    {{#if this.isDeleting}}
+                    <i class="fa-solid fa-spinner fa-spin"></i> <span style="display:inline-block">Deleting...</span>
+                    {{else}}
+                    Delete Selected
+                    {{/if}}
+                </button>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+</div>

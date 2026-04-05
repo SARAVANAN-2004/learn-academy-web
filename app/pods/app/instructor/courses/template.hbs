@@ -2,7 +2,7 @@
     <div class="page-header">
         <h1>Courses</h1>
         <div class="header-actions">
-            <LinkTo @route="app.instructor.create-course" @model="new" class="btn btn-primary">
+            <LinkTo @route="app.instructor.enrollment-steps" @model="new" class="btn btn-primary">
                 <i class="fa-solid fa-plus"></i> New Course
             </LinkTo>
         </div>
@@ -41,7 +41,7 @@
             <div class="action-menu d-inline-block" style="position: relative;">
                 <button type="button" class="btn btn-export" {{on "click" (fn this.toggleDropdown "export" )}}>
                     {{#if this.isExporting}}
-                    <i class="fa-solid fa-spinner spinner"></i> Compiling...
+                    <i class="fa-solid fa-spinner fa-spin"></i> Compiling...
                     {{else}}
                     <i class="fa-solid fa-download"></i> Export <i class="fa-solid fa-chevron-down"
                         style="font-size:0.75rem;"></i>
@@ -65,7 +65,7 @@
             <button type="button" class="btn btn-bulk-delete" {{on "click" this.bulkDelete}}
                 disabled={{this.isDeleting}}>
                 {{#if this.isDeleting}}
-                <i class="fa-solid fa-spinner spinner"></i> Deleting...
+                <i class="fa-solid fa-spinner fa-spin"></i> Deleting...
                 {{else}}
                 <i class="fa-solid fa-trash-can"></i> Bulk Delete
                 {{/if}}

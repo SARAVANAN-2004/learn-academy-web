@@ -1,0 +1,63 @@
+<div class="instructor-tests-edit-page" style="padding: 2rem;">
+    <div class="page-header" style="margin-bottom: 2rem;">
+        <LinkTo @route="app.instructor.tests.view" @model={{this.testData.id}}
+            style="text-decoration: none; color: #6b7280; font-size: 0.9rem; margin-bottom: 10px; display: inline-block;">
+            <i class="fa-solid fa-arrow-left"></i> Back to Test Details
+        </LinkTo>
+        <h1>Edit Test Metadata</h1>
+        <p style="color: #6b7280;">Update the core properties of your test.</p>
+    </div>
+
+    <div
+        style="background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); max-width: 600px;">
+        <form {{on "submit" this.saveTest}}>
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Test Title
+                    *</label>
+                <input type="text" value={{this.testData.title}} {{on "input" (fn this.updateField "title" )}}
+                    style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 4px;" required
+                    placeholder="e.g. Midterm Test 1" />
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Category *</label>
+                <input type="text" value={{this.testData.category}} {{on "input" (fn this.updateField "category" )}}
+                    style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 4px;" required
+                    placeholder="e.g. Science" />
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Description</label>
+                <textarea rows="4" value={{this.testData.description}} {{on "input" (fn this.updateField "description"
+                    )}}
+                    style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 4px; resize: vertical;"
+                    placeholder="Brief details about the test"></textarea>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Time Limit
+                    (minutes)</label>
+                <input type="number" min="0" value={{this.testData.timeLimit}} {{on "input" (fn
+                    this.updateField "timeLimit" )}}
+                    style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 4px;"
+                    placeholder="Leave empty for no limit" />
+                <small style="color: #6b7280; display: block; margin-top: 4px;">Set to 0 or leave empty for no time
+                    limit.</small>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <LinkTo @route="app.instructor.tests.view" @model={{this.testData.id}}
+                    class="btn btn-outline-secondary">
+                    Cancel
+                </LinkTo>
+                <button type="submit" class="btn btn-primary" disabled={{this.isSaving}}>
+                    {{#if this.isSaving}}
+                    <i class="fa-solid fa-spinner fa-spin"></i> Saving...
+                    {{else}}
+                    Save Changes
+                    {{/if}}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,207 @@
+{{! template-lint-disable no-inline-styles }}
+
+{{#if this.isTestCompleted}}
+<div class='test-result-screen'>
+    <div class='test-result-container'>
+        <div class='test-result-header'>
+            <h2>Test Results</h2>
+            <p>You have successfully completed the test.</p>
+        </div>
+
+        <div class='result-summary-card'>
+            <div class='result-percentage'>{{this.resultPercentage}}%</div>
+            <div class='result-label'>Overall Score</div>
+
+            <div class='result-metrics'>
+                <div class='result-metric'>
+                    <div class='result-metric-value'>{{this.resultCorrect}}</div>
+                    <div class='result-metric-label'>Correct</div>
+                </div>
+                <div class='result-metric'>
+                    <div class='result-metric-value'>{{this.resultWrong}}</div>
+                    <div class='result-metric-label'>Wrong</div>
+                </div>
+                <div class='result-metric'>
+                    <div class='result-metric-value'>
+                        {{if this.resultData this.resultData.totalQuestions '0'}}
+                    </div>
+                    <div class='result-metric-label'>Total Questions</div>
+                </div>
+            </div>
+        </div>
+
+        <div class='result-leaderboard-card'>
+            <h3>Leaderboard</h3>
+            {{#if this.leaderboardRows.length}}
+            <ul class='result-leaderboard-list'>
+                {{#each this.leaderboardRows as |user index|}}
+                <li class='result-leaderboard-item'>
+                    <div class='result-leaderboard-user'>
+                        <div class='result-rank-badge'>{{add index 1}}</div>
+                        <div class='result-user-name'>{{user.userName}}</div>
+                    </div>
+                    <div class='result-user-score'>{{user.score}} pts</div>
+                </li>
+                {{/each}}
+            </ul>
+            {{else}}
+            <div class='result-empty-state'>
+                Evaluating leaderboard positions...
+            </div>
+            {{/if}}
+
+            <div class='result-footer'>
+                <LinkTo @route='app.dashboard' class='btn btn-outline-primary result-dashboard-link'>
+                    Return to Dashboard
+                </LinkTo>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{else if this.testStarted}}
+<div class='test-attempt-page'>
+    <header class='test-topbar'>
+        <div class='test-title'>
+            <h2>{{this.displayTitle}}</h2>
+        </div>
+        <div class='test-timer {{if (lt this.remainingTimeSeconds 300) "danger"}}'>
+            {{this.formattedTime}}
+        </div>
+        <div class='test-actions'>
+            <button type='button' class='btn btn-submit' disabled={{this.isSubmitting}} {{on 'click' this.submitTest}}>
+                Submit Test
+            </button>
+        </div>
+    </header>
+
+    <div class='test-layout-grid'>
+        <aside class='test-sidebar-left' aria-label='Section navigation'>
+            <h3>Sections</h3>
+            <ul class='section-nav'>
+                {{#each this.sections as |section|}}
+                <li>
+                    <button type='button' class='section-item
+                  {{if (eq section.id this.currentSectionId) "active"}}' {{on 'click' (fn this.loadSection
+                        section.id)}}>
+                        <span>{{section.title}}</span>
+                        {{#if section.questionCount}}
+                        <small>{{section.questionCount}} questions</small>
+                        {{/if}}
+                        {{#if (eq section.id this.currentSectionId)}}
+                        <div style="font-size: 0.8rem; margin-top: 0.5rem; text-align: left;">
+                            <strong style="color: var(--test-answered)">Ans:
+                                {{this.activeSectionStats.answered}}</strong> |
+                            <strong style="color: var(--test-secondary)">Not Ans:
+                                {{this.activeSectionStats.unanswered}}</strong> |
+                            <strong style="color: var(--test-review)">Review:
+                                {{this.activeSectionStats.review}}</strong>
+                        </div>
+                        {{/if}}
+                    </button>
+                </li>
+                {{/each}}
+            </ul>
+            {{#if this.activeSection}}
+            <button type='button' class='btn btn-outline-primary mt-3 w-100' {{on 'click' this.completeSection}}>
+                Complete Section
+            </button>
+            {{/if}}
+        </aside>
+
+        <main class='test-main-content'>
+            {{#if this.currentQuestion}}
+            <div class='question-container'>
+                <div class='q-header'>
+                    <h4>Question {{add this.currentQuestionIndex 1}}</h4>
+                    <div class='marks-badge'>Marks:
+                        {{this.currentQuestion.marks}}</div>
+                </div>
+                <div class='q-body'>
+                    <p class='q-text'>{{this.currentQuestion.text}}</p>
+
+                    <div class='q-options'>
+                        <StudentQuestionCard @question={{this.currentQuestion}} @onAnswer={{this.submitAnswer}} />
+                    </div>
+                </div>
+
+                <div class='q-footer-actions'>
+                    <button type='button' class='btn btn-secondary' disabled={{not this.hasPreviousQuestion}}
+                        {{on 'click' this.prevQuestion}}>
+                        Previous
+                    </button>
+                    <button type='button'
+                        class='btn {{if this.currentQuestion._state.markedForReview "btn-secondary" "btn-warning"}}'
+                        {{on 'click' (fn this.markForReview this.currentQuestion.id (not
+                        this.currentQuestion._state.markedForReview)) }}>
+                        {{if this.currentQuestion._state.markedForReview "Unmark Review" "Mark for Review"}}
+                    </button>
+                    <button type='button' class='btn btn-primary' disabled={{not (or this.hasNextQuestion
+                        this.hasNextSection)}} {{on 'click' this.nextQuestion}}>
+                        {{if this.hasNextQuestion "Next Question" "Next Section"}}
+                    </button>
+                </div>
+            </div>
+            {{else if this.isLoadingSection}}
+            <div class='loading-state'>Loading questions...</div>
+            {{else}}
+            <div class='loading-state'>No questions available for this section.</div>
+            {{/if}}
+        </main>
+
+        <aside class='test-sidebar-right' aria-label='Question palette'>
+            <h3>Question Palette</h3>
+            <div class='palette-grid'>
+                {{#each this.questions as |question index|}}
+                <button type='button' class='palette-btn
+                {{if question._state.answered "answered"}}
+                {{if question._state.markedForReview "review"}}
+                {{if (eq this.currentQuestionIndex index) "active"}}' {{on 'click' (fn this.goToQuestion index)}}>
+                    {{add index 1}}
+                </button>
+                {{/each}}
+            </div>
+            <div class='palette-legend mt-4'>
+                <div class='legend-item'><span class='dot answered'></span>
+                    Answered</div>
+                <div class='legend-item'><span class='dot unanswered'></span>
+                    Not Answered</div>
+                <div class='legend-item'><span class='dot review'></span>
+                    Marked for Review</div>
+            </div>
+        </aside>
+    </div>
+
+    {{#if this.showWarningModal}}
+    <div class='warning-modal-overlay'>
+        <div class='warning-modal'>
+            <h3>Warning</h3>
+            <p>{{this.warningMessage}}</p>
+            <button type='button' class='btn btn-primary' {{on 'click' this.closeWarningModal}}>
+                Acknowledge & Continue
+            </button>
+        </div>
+    </div>
+    {{/if}}
+</div>
+{{else}}
+<div class='test-start-screen'>
+    <div class='start-card'>
+        <h2>{{this.displayTitle}}</h2>
+        <p>
+            You have
+            {{or this.testData.timeLimit 60}}
+            minutes to complete this test. Please ensure you have a stable internet
+            connection.
+        </p>
+        <p>
+            <strong>Important:</strong>
+            This test requires fullscreen mode. Changing tabs or exiting fullscreen
+            will be recorded, and repeated violations can auto-submit your attempt.
+        </p>
+        <button type='button' class='btn btn-primary start-test-button' {{on 'click' this.startTestWithFullscreen}}>
+            Start Test
+        </button>
+    </div>
+</div>
+{{/if}}

@@ -1,0 +1,23 @@
+<div class="skeleton-container skeleton-{{@type}}">
+    {{#each this.items}}
+    {{#if (eq @type "card")}}
+    <div class="skeleton-card">
+        <div class="skeleton-image"></div>
+        <div class="skeleton-content">
+            <div class="skeleton-line skeleton-title"></div>
+            <div class="skeleton-line skeleton-text"></div>
+            <div class="skeleton-line skeleton-button"></div>
+        </div>
+    </div>
+    {{else if (eq @type "table")}}
+    <div class="skeleton-table-row">
+        <div class="skeleton-cell"></div>
+        <div class="skeleton-cell"></div>
+        <div class="skeleton-cell"></div>
+        <div class="skeleton-cell"></div>
+    </div>
+    {{else}}
+    <div class="skeleton-line"></div>
+    {{/if}}
+    {{/each}}
+</div>

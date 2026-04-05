@@ -1,0 +1,18 @@
+<div class="metric-card test-metric">
+    <div class="metric-header">
+        <h3 class="metric-title">{{@title}}</h3>
+        <span class="metric-icon test-icon">
+            <i class="fa-solid {{@icon}}"></i>
+        </span>
+    </div>
+    <div class="metric-content">
+        <div class="metric-value">{{@value}}</div>
+        {{#if @trend}}
+        <div class="metric-trend {{if (gt @trend 0) 'positive' 'negative'}}">
+            <i class="fa-solid {{if (gt @trend 0) 'fa-arrow-up' 'fa-arrow-down'}}"></i>
+            {{abs @trend}}%
+            <span class="trend-label">vs last month</span>
+        </div>
+        {{/if}}
+    </div>
+</div>

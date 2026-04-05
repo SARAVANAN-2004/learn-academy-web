@@ -1,0 +1,129 @@
+<div class='create-test-page'>
+  <CreateTestSidebar @sections={{this.sections}} @activeSectionId={{this.activeSectionId}}
+    @onAddSection={{this.addSection}} @onSelectSection={{this.selectSection}} />
+
+  <div class='main-content-wrapper'>
+    <div class='test-settings-card'>
+      <h2>Test Settings</h2>
+
+      <div class='form-group'>
+        <label for='test-course'>Course</label>
+        <select id='test-course' class='form-control form-select' {{on 'change' (fn this.updateMeta 'selectedCourseId'
+          )}}>
+          <option value='' selected={{eq this.selectedCourseId '' }}>Standalone
+            Test</option>
+          {{#each this.courses key='id' as |course|}}
+          <option value={{course.id}} selected={{eq course.id this.selectedCourseId}}>
+            {{course.title}}
+          </option>
+          {{/each}}
+        </select>
+      </div>
+
+      <div class='form-group'>
+        <label>Test Title</label>
+        <input type='text' id='test-title' class='form-control' value={{this.title}}
+          placeholder='e.g. Midterm Examination' {{on 'input' (fn this.updateMeta 'title' )}} />
+      </div>
+
+      <div class='form-group'>
+        <label>Description</label>
+        <textarea id='test-description' class='form-control' rows='3' placeholder='Instructions for students...'
+          {{on 'input' (fn this.updateMeta 'description' )}}>{{this.description}}</textarea>
+      </div>
+
+      <div class='row settings-row'>
+        <div class='form-group settings-field'>
+          <label>Time Limit (minutes)</label>
+          <input type='number' id='test-time-limit' class='form-control' min='1' value={{this.timeLimit}} {{on 'input'
+            (fn this.updateMeta 'timeLimit' )}} />
+        </div>
+        <div class='form-group settings-summary'>
+          <strong>Total Marks: {{this.totalMarks}}</strong>
+        </div>
+      </div>
+
+      <div class='row settings-row settings-toggles'>
+        <div class='form-group settings-field'>
+          <label class='toggle-switch'>
+            <input type='checkbox' id='test-negative-marking' checked={{this.hasNegativeMarking}} {{on 'change' (fn
+              this.updateMeta 'hasNegativeMarking' )}} />
+            Enable Negative Marking
+          </label>
+          {{#if this.hasNegativeMarking}}
+          <input type='number' id='test-negative-val' class='form-control mt-2' value={{this.negativeMarkValue}}
+            placeholder='Negative marks per wrong answer' {{on 'input' (fn this.updateMeta 'negativeMarkValue' )}} />
+          {{/if}}
+        </div>
+
+        <div class='form-group settings-field'>
+          <label class='toggle-switch'>
+            <input type='checkbox' id='test-strict-mode' checked={{this.isStrictMode}} {{on 'change' (fn
+              this.updateMeta 'isStrictMode' )}} />
+            Enable Strict Mode
+          </label>
+          {{#if this.isStrictMode}}
+          <input type='number' id='test-max-switches' class='form-control mt-2' value={{this.maxTabSwitches}}
+            placeholder='Max allowed tab switches' {{on 'input' (fn this.updateMeta 'maxTabSwitches' )}} />
+          {{/if}}
+        </div>
+      </div>
+    </div>
+
+    {{#if this.activeSection}}
+    <div class='section-builder'>
+      <div class='section-header-card'>
+        <div class='section-title-input'>
+          <input type='text' id='section-title' class='form-control' value={{this.activeSection.title}}
+            placeholder='Section Title' {{on 'input' this.updateSectionTitle}} />
+        </div>
+        <div class='section-header-actions'>
+          <span>Total Questions:
+            {{this.activeSection.questions.length}}</span>
+          <button type='button' class='btn btn-outline-danger btn-sm' {{on 'click' (fn this.removeSection
+            this.activeSection.id)}}>
+            Remove Section
+          </button>
+        </div>
+      </div>
+
+      <div class='questions-list'>
+        {{#each this.activeSection.questions key='id' as |question index|}}
+        <QuestionCard @question={{question}} @index={{index}} @onUpdateQuestion={{this.updateQuestion}}
+          @onUpdateOption={{this.updateOption}} @onRemoveQuestion={{fn this.removeQuestion question.id}}
+          @onAddOption={{this.addOption}} @onRemoveOption={{this.removeOption}} />
+        {{/each}}
+      </div>
+
+      <div class='add-question-wrapper'>
+        <button type='button' class='btn btn-add-question' {{on 'click' this.addQuestion}}>
+          + Add Question
+        </button>
+      </div>
+    </div>
+
+    <div class='add-section-wrapper'>
+      <button type='button' class='btn btn-outline-primary add-section-button' {{on 'click' this.addSection}}>
+        + Add Another Section
+      </button>
+    </div>
+    {{/if}}
+
+    <div class='action-footer'>
+      <button type='button' class='btn btn-light action-button' {{on 'click' this.cancel}}>
+        Cancel
+      </button>
+      <button type='button' class='btn btn-outline-secondary action-button' {{on 'click' this.saveDraftManual}}>
+        Save Draft
+      </button>
+      <button type='button' class='btn btn-create-test' disabled={{this.isSubmitting}} {{on 'click' this.createTest}}>
+        {{#if this.isSubmitting}}
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        Creating...
+        {{else}}
+        Create Test
+        {{/if}}
+      </button>
+    </div>
+  </div>
+</div>

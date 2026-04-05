@@ -44,6 +44,21 @@
                 </div>
                 <h2>{{this.roundedAvgCompletion}}%</h2>
             </div>
+            <!-- Added Test Analytics -->
+            <div class="stat-card">
+                <div class="stat-meta">
+                    <span class="stat-label">Total Test Enrollments</span>
+                    <span class="stat-icon" style="background: rgba(111,66,193,0.1); color: #6f42c1;">📝</span>
+                </div>
+                <h2>{{if this.model.totalTestEnrollments this.model.totalTestEnrollments 0}}</h2>
+            </div>
+            <div class="stat-card">
+                <div class="stat-meta">
+                    <span class="stat-label">Avg Test Completion</span>
+                    <span class="stat-icon" style="background: rgba(111,66,193,0.1); color: #6f42c1;">🎯</span>
+                </div>
+                <h2>{{if this.model.avgTestCompletion this.model.avgTestCompletion "0%"}}</h2>
+            </div>
         </section>
 
         {{!-- Insights Panel --}}

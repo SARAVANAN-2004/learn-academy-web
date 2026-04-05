@@ -1,0 +1,46 @@
+<div class="test-table-container courses-table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Test Name</th>
+                <th>Total Users</th>
+                <th>Avg Score / Completion</th>
+                <th>Attempts</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each @tests as |test|}}
+            <tr>
+                <td>
+                    <div class="course-meta">
+                        <div class="title">{{if test.title test.title "Untitled Test"}}
+                            <TypeBadge @type="TEST" />
+                        </div>
+                        <div class="category">{{if test.category test.category "Uncategorized"}}</div>
+                    </div>
+                </td>
+                <td>
+                    <div class="course-stats">
+                        <span title="Users"><i class="fa-solid fa-users"></i> {{if test.totalUsers test.totalUsers
+                            0}}</span>
+                    </div>
+                </td>
+                <td>
+                    {{if test.avgScore test.avgScore "0%"}}
+                </td>
+                <td>
+                    {{if test.attempts test.attempts 0}}
+                </td>
+            </tr>
+            {{else}}
+            <tr>
+                <td colspan="4">
+                    <div class="empty-state" style="padding: 2rem;">
+                        <p style="text-align: center; color: #6b7280;">No tests available for this report.</p>
+                    </div>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>

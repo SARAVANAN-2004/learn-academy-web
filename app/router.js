@@ -20,8 +20,14 @@ Router.map(function () {
       this.route('dashboard');
       this.route('enrollment-steps', { path: '/enrollment-steps/:course_id' });
       this.route('create-course', { path: '/create-course/:course_id' });
+      this.route('create-test');
       this.route('courses');
+      this.route('tests', function () {
+        this.route('view', { path: '/:testId' });
+        this.route('edit', { path: '/:testId/edit' });
+      });
       this.route('reports');
     });
+    this.route('test-attempt', { path: '/test-attempt/:test_id' });
   });
 });

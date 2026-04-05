@@ -1,18 +1,39 @@
 {{page-title "My Learning"}}
 
-<div class="mylearning-page">
+<div class="mylearning-page" style="padding: 2rem;">
     <main>
-        <h2>My Courses</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h2>My Learning</h2>
 
-        {{#if this.model.length}}
+            <div class="dashboard-filters" style="display: flex; gap: 10px;">
+                <button type="button" class="btn {{if (eq this.type 'all') 'btn-primary' 'btn-outline-primary'}}"
+                    {{on "click" (fn this.setType 'all' )}}>All</button>
+                <button type="button" class="btn {{if (eq this.type 'course') 'btn-primary' 'btn-outline-primary'}}"
+                    {{on "click" (fn this.setType 'course' )}}>Courses</button>
+                <button type="button" class="btn {{if (eq this.type 'test') 'btn-primary' 'btn-outline-primary'}}"
+                    {{on "click" (fn this.setType 'test' )}}>Tests</button>
+            </div>
+        </div>
+
+        {{#if this.filteredModel.length}}
         <div class="dashboard-grid">
-            {{#each this.model as |course|}}
-            <CourseCard @course={{course}} @isEnrolled={{true}} />
+            {{#each this.filteredModel as |item|}}
+            {{#if (or (eq item.type 'TEST') (eq item.type 'test'))}}
+            <TestCard @test={{item}} @isEnrolled={{true}} />
+            {{else}}
+            <!-- Default to Course -->
+            <CourseCard @course={{item}} @isEnrolled={{true}} />
+            {{/if}}
             {{/each}}
         </div>
         {{else}}
-        <p style="text-align: center; font-size: 1.2rem; margin-top: 50px; color: #555;">You have not enrolled in any
-            courses yet.</p>
+        <div class="empty-state" style="text-align: center; padding: 4rem; background: #f9fafa; border-radius: 8px;">
+            <i class="fa-solid fa-graduation-cap" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 1rem;"></i>
+            <h3 style="color: #475569;">Nothing here yet</h3>
+            <p style="color: #64748b; margin-bottom: 1.5rem;">You haven't enrolled in any items for this selection.</p>
+            <LinkTo @route="app.dashboard" class="btn btn-primary" style="padding: 0.75rem 1.5rem;">Explore Catalog
+            </LinkTo>
+        </div>
         {{/if}}
     </main>
 </div>

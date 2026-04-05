@@ -1,0 +1,128 @@
+<div class="instructor-tests-view-page" style="padding: 2rem;">
+    <div class="page-header" style="margin-bottom: 2rem;">
+        <LinkTo @route="app.instructor.tests.index"
+            style="text-decoration: none; color: #6b7280; font-size: 0.9rem; margin-bottom: 10px; display: inline-block;">
+            <i class="fa-solid fa-arrow-left"></i> Back to Tests
+        </LinkTo>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1 style="display: flex; align-items: center; gap: 10px;">
+                {{if this.test.title this.test.title "Test Details"}}
+                <TypeBadge @type="TEST" />
+            </h1>
+            <LinkTo @route="app.instructor.tests.edit" @model={{this.test.id}} class="btn btn-primary">
+                <i class="fa-solid fa-pen"></i> Edit Test
+            </LinkTo>
+        </div>
+        <p style="color: #6b7280; margin-top: 5px;">{{if this.test.description this.test.description "No description
+            provided."}}</p>
+    </div>
+
+    <div class="custom-tabs" style="display: flex; gap: 20px; border-bottom: 1px solid #eaeaea; margin-bottom: 2rem;">
+        <button type="button" class="tab-btn {{if this.isOverview 'active'}}"
+            style="background: none; border: none; padding: 10px 0; font-size: 1rem; font-weight: 500; cursor: pointer; border-bottom: 2px solid {{if this.isOverview '#6f42c1' 'transparent'}}; color: {{if this.isOverview '#6f42c1' '#6b7280'}};"
+            {{on "click" (fn this.setTab "overview" )}}>Overview</button>
+        <button type="button" class="tab-btn {{if this.isQuestions 'active'}}"
+            style="background: none; border: none; padding: 10px 0; font-size: 1rem; font-weight: 500; cursor: pointer; border-bottom: 2px solid {{if this.isQuestions '#6f42c1' 'transparent'}}; color: {{if this.isQuestions '#6f42c1' '#6b7280'}};"
+            {{on "click" (fn this.setTab "questions" )}}>Questions ({{if this.test.questionCount this.test.questionCount
+            0}})</button>
+        <button type="button" class="tab-btn {{if this.isAnalytics 'active'}}"
+            style="background: none; border: none; padding: 10px 0; font-size: 1rem; font-weight: 500; cursor: pointer; border-bottom: 2px solid {{if this.isAnalytics '#6f42c1' 'transparent'}}; color: {{if this.isAnalytics '#6f42c1' '#6b7280'}};"
+            {{on "click" (fn this.setTab "analytics" )}}>Analytics</button>
+    </div>
+
+    <div class="tab-content"
+        style="background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        {{#if this.isOverview}}
+        <div class="overview-grid"
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+            <div class="stat-box"
+                style="padding: 1.5rem; background: #f9fafa; border-radius: 8px; border: 1px solid #eaeaea;">
+                <h4 style="margin: 0 0 10px; color: #6b7280; font-size: 0.9rem;">Category</h4>
+                <p style="font-size: 1.25rem; font-weight: 600; margin: 0; color: #111827;">{{if this.test.category
+                    this.test.category "General"}}</p>
+            </div>
+            <div class="stat-box"
+                style="padding: 1.5rem; background: #f9fafa; border-radius: 8px; border: 1px solid #eaeaea;">
+                <h4 style="margin: 0 0 10px; color: #6b7280; font-size: 0.9rem;">Time Limit</h4>
+                <p style="font-size: 1.25rem; font-weight: 600; margin: 0; color: #111827;">{{if this.test.timeLimit
+                    this.test.timeLimit "None"}} mins</p>
+            </div>
+            <div class="stat-box"
+                style="padding: 1.5rem; background: #f9fafa; border-radius: 8px; border: 1px solid #eaeaea;">
+                <h4 style="margin: 0 0 10px; color: #6b7280; font-size: 0.9rem;">Enrolled Users</h4>
+                <p style="font-size: 1.25rem; font-weight: 600; margin: 0; color: #111827;">{{if this.test.studentCount
+                    this.test.studentCount 0}}</p>
+            </div>
+        </div>
+
+        <div style="margin-top: 2rem;">
+            <h3 style="margin-bottom: 1rem; color: #111827;">Test Status</h3>
+            <div style="display:flex; gap:10px;">
+                <span class="badge-tag {{if this.test.published 'completed' 'draft'}}"
+                    style="padding: 0.5rem 1rem; border-radius: 9999px; font-weight: 600; font-size: 0.85rem; {{if this.test.published 'background:#dcfce7;color:#166534;' 'background:#f3f4f6;color:#374151;'}}">{{if
+                    this.test.published "Active" "Draft"}}</span>
+            </div>
+        </div>
+
+        {{else if this.isQuestions}}
+        <div class="questions-list">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3 style="margin: 0; color: #111827;">Questions</h3>
+                <LinkTo @route="app.instructor.create-test" @query={{hash testId=this.test.id}}
+                    class="btn btn-outline-primary" style="font-size: 0.85rem;">
+                    <i class="fa-solid fa-list-check"></i> Manage Questions in Builder
+                </LinkTo>
+            </div>
+
+            {{!-- Iterate through this.test.sections and questions here --}}
+            {{#if this.test.sections.length}}
+            {{#each this.test.sections as |section|}}
+            <div style="margin-bottom: 2rem;">
+                <h4 style="background: #f9fafa; padding: 10px 15px; border-radius: 4px; color: #374151;">
+                    {{section.title}}</h4>
+                <div style="padding: 10px 15px;">
+                    {{#each section.questions as |question index|}}
+                    <div style="padding: 15px 0; border-bottom: 1px solid #eaeaea;">
+                        <p style="font-weight: 500; margin: 0 0 10px;">Q{{add index 1}}: {{question.questionText}}</p>
+                        <span
+                            style="font-size: 0.8rem; color: #6b7280; background: #f3f4f6; padding: 2px 8px; border-radius: 4px;">{{question.questionType}}</span>
+                        <span style="font-size: 0.8rem; color: #6b7280; margin-left: 10px;">Marks:
+                            {{question.marks}}</span>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+            {{/each}}
+            {{else}}
+            <div style="text-align: center; color: #6b7280; padding: 2rem; background: #f9fafa; border-radius: 8px;">
+                <p>No questions added to this test yet.</p>
+            </div>
+            {{/if}}
+        </div>
+
+        {{else if this.isAnalytics}}
+        <div class="analytics-tab">
+            <h3 style="margin: 0 0 1.5rem; color: #111827;">Aggregated Analytics</h3>
+
+            <div class="dashboard-grid"
+                style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 2rem;">
+                <TestAnalytics @title="Total Attempts" @value={{if this.test.analysis.totalAttempts
+                    this.test.analysis.totalAttempts 0}} @icon="fa-pen-to-square" />
+                <TestAnalytics @title="Submitted" @value={{if this.test.analysis.submittedAttempts
+                    this.test.analysis.submittedAttempts "0" }} @icon="fa-check-to-slot" />
+                <TestAnalytics @title="Average Score" @value={{if this.test.analysis.averageScore
+                    this.test.analysis.averageScore "0" }} @icon="fa-chart-pie" />
+                <TestAnalytics @title="Highest Score" @value={{if this.test.analysis.highestScore
+                    this.test.analysis.highestScore "0" }} @icon="fa-trophy" />
+            </div>
+
+            <div
+                style="padding: 1.5rem; background: #fff3cd; color: #856404; border: 1px solid #ffeeba; border-radius: 8px; font-size: 0.9rem;">
+                <i class="fa-solid fa-lock" style="margin-right: 5px;"></i>
+                <strong>Privacy Notice:</strong> Individual user details and specific attempt data are hidden for tests
+                as per the platform's test privacy policy. Only aggregated statistics are shown here.
+            </div>
+        </div>
+        {{/if}}
+    </div>
+</div>

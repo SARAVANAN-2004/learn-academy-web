@@ -1,0 +1,20 @@
+<div class="export-dropdown" ...attributes>
+    <button type="button" class="btn btn-outline-primary" disabled={{this.isExporting}} {{on "click"
+        this.toggleDropdown}}>
+        {{#if this.isExporting}}
+        <span class="spinner">⏳</span> Exporting...
+        {{else}}
+        <i class="fa-solid fa-download"></i> Export ▼
+        {{/if}}
+    </button>
+    {{#if this.isOpen}}
+    <div class="dropdown-content">
+        <button type="button" {{on "click" (fn this.exportData "csv" )}}><i class="fa-solid fa-file-csv"></i> Export as
+            CSV</button>
+        <button type="button" {{on "click" (fn this.exportData "xlsx" )}}><i class="fa-solid fa-table"></i> Export as
+            XLSX</button>
+        <button type="button" {{on "click" (fn this.exportData "pdf" )}}><i class="fa-solid fa-file-pdf"></i> Export as
+            PDF</button>
+    </div>
+    {{/if}}
+</div>

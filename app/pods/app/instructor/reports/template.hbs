@@ -1,159 +1,183 @@
-<div class="instructor-reports-page">
-    <div class="toolbar">
-        <div class="search-wrapper">
-            <i>🔍</i>
-            <input type="text" placeholder="Search by course or category..." value={{this.searchQuery}} {{on "input" (fn
-                this.updateSearch)}} />
+<div class="instructor-reports-page" style="padding: 2rem;">
+    <div class="page-header"
+        style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+        <h1>Reports</h1>
+        <div class="dashboard-filters" style="display: flex; gap: 10px;">
+            <button type="button" class="btn {{if (eq this.type 'all') 'btn-primary' 'btn-outline-primary'}}"
+                {{on "click" (fn this.setType 'all' )}}>All</button>
+            <button type="button" class="btn {{if (eq this.type 'course') 'btn-primary' 'btn-outline-primary'}}"
+                {{on "click" (fn this.setType 'course' )}}>Courses</button>
+            <button type="button" class="btn {{if (eq this.type 'test') 'btn-primary' 'btn-outline-primary'}}"
+                {{on "click" (fn this.setType 'test' )}}>Tests</button>
+        </div>
+    </div>
+
+    <div class="toolbar"
+        style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 1rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <div class="search-wrapper" style="position: relative; flex: 1; max-width: 400px;">
+            <i style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #9ca3af;">🔍</i>
+            <input type="text" placeholder="Search report..." value={{this.searchQuery}} {{on "input" (fn
+                this.updateSearch)}}
+                style="width: 100%; padding: 10px 10px 10px 35px; border: 1px solid #d1d5db; border-radius: 4px;" />
         </div>
 
-        <div class="toolbar-actions">
-            <span class="selection-info">
-                {{#if this.allSelected}}All Selected{{else}}Select courses to export{{/if}}
+        <div class="toolbar-actions" style="display: flex; align-items: center; gap: 15px;">
+            <span class="selection-info" style="font-size: 0.85rem; color: #6b7280;">
+                {{#if this.allSelected}}All Selected{{else}}Select items to export{{/if}}
             </span>
-            <div class="action-menu">
-                <button type="button" class="btn btn-export" disabled={{this.isExporting}}>
-                    {{#if this.isExporting}}
-                    <span class="spinner">⏳</span> Exporting...
-                    {{else}}
-                    Export As ▼
-                    {{/if}}
-                </button>
-                <div class="dropdown-content">
-                    <button type="button" {{on "click" (fn this.exportReport "csv" )}}>Export CSV</button>
-                    <button type="button" {{on "click" (fn this.exportReport "xlsx" )}}>Export XLSX</button>
-                    <button type="button" {{on "click" (fn this.exportReport "pdf" )}}>Export PDF</button>
-                </div>
-            </div>
+            <ExportDropdown @endpoint="/api/instructor/course-report/export" @payload={{this.exportPayload}} />
         </div>
     </div>
 
-    <div class="reports-table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th style="width: 40px; text-align: center;">
-                        <input type="checkbox" class="custom-checkbox" checked={{this.allSelected}} {{on "change"
-                            this.toggleSelectAll}}>
-                    </th>
-                    <th style="width: 40px;"></th> <!-- Expand arrow -->
-                    <th>Course Name</th>
-                    <th>Category</th>
-                    <th>Created Date</th>
-                    <th style="text-align: center;">Enrolled Users</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#if (eq this.filteredCourses.length 0)}}
-                <tr>
-                    <td colspan="6">
-                        <div class="empty-state">
-                            <span class="empty-icon">📊</span>
-                            <h3>No courses to report!</h3>
-                        </div>
-                    </td>
-                </tr>
-                {{/if}}
-
-                {{#each this.filteredCourses as |wrapper|}}
-                <tr class="parent-row {{if wrapper.isExpanded 'expanded'}}" {{on "click" (fn this.toggleRow wrapper)}}>
-                    <td style="text-align: center;" {{on "click" this.stopPropagation}}>
-                        <input type="checkbox" class="custom-checkbox" checked={{wrapper.isSelected}} {{on "change" (fn
-                            this.toggleCourseSelection wrapper)}}>
-                    </td>
-                    <td style="text-align: center; color: #9ca3af;">
-                        <span class="expand-icon">▶</span>
-                    </td>
-                    <td>
-                        <div class="course-title">{{wrapper.course.courseName}}</div>
-                    </td>
-                    <td><span class="badge">{{wrapper.course.courseCategory}}</span></td>
-                    <td style="color: #6b7280; font-size: 0.9rem;">{{wrapper.course.createdAt}}</td>
-                    <td style="text-align: center; font-weight: 700; color: #4f46e5;">{{wrapper.enrolledUsers.length}}
-                    </td>
-                </tr>
-
-                {{#if wrapper.isExpanded}}
-                <tr class="nested-row">
-                    <td colspan="6">
-                        <div class="nested-container">
-                            {{#if (eq wrapper.enrolledUsers.length 0)}}
-                            <h4 style="color: #6b7280; font-style: italic;">No users enrolled inside this course yet.
-                            </h4>
+    <section style="margin-bottom: 3rem;">
+        <h2 style="margin-bottom: 1rem; font-size: 1.25rem; display: flex; align-items: center; gap: 10px;">
+            <i class="fa-solid fa-chart-line" style="color: #4f46e5;"></i> Reports
+        </h2>
+        <div class="reports-table-container"
+            style="background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 40px; text-align: center;">
+                            <input type="checkbox" class="custom-checkbox" checked={{this.allSelected}} {{on "change"
+                                this.toggleSelectAll}}>
+                        </th>
+                        <th style="width: 40px;"></th> <!-- Expand arrow -->
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Category</th>
+                        <th style="text-align: center;">Users</th>
+                        <th style="text-align: center;">Avg. Progress</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each this.filteredCourses as |wrapper|}}
+                    <tr class="parent-row {{if wrapper.isExpanded 'expanded'}}" {{on "click" (fn this.toggleRow
+                        wrapper)}} style="cursor: pointer;">
+                        <td style="text-align: center;" {{on "click" this.stopPropagation}}>
+                            <input type="checkbox" class="custom-checkbox" checked={{wrapper.isSelected}} {{on "change"
+                                (fn this.toggleCourseSelection wrapper)}}>
+                        </td>
+                        <td style="text-align: center; color: #9ca3af;">
+                            <i class="fa-solid {{if wrapper.isExpanded 'fa-chevron-down' 'fa-chevron-right'}}"
+                                style="font-size: 0.8rem;"></i>
+                        </td>
+                        <td>
+                            <div class="course-title" style="font-weight: 500;">
+                                {{#if wrapper.course.courseName}}
+                                {{wrapper.course.courseName}}
+                                {{else if wrapper.course.testTitle}}
+                                {{wrapper.course.testTitle}}
+                                {{else if wrapper.course.title}}
+                                {{wrapper.course.title}}
+                                {{/if}}
+                            </div>
+                        </td>
+                        <td>
+                            {{#if wrapper.isTest}}
+                            <span class="badge"
+                                style="background: rgba(111, 66, 193, 0.1); color: #6f42c1; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">TEST</span>
                             {{else}}
-                            <h4>Enrolled Users</h4>
-                            <table class="nested-table">
-                                <thead>
-                                    <tr>
-                                        <th>Student Information</th>
-                                        <th>Enrolled At</th>
-                                        <th style="text-align: center;">Overall Progress</th>
-
-                                        <!-- Dynamic Sections -->
-                                        {{#each wrapper.sectionHeaders as |section sIndex|}}
-                                        <th style="text-align: center;" title={{section.sectionTitle}}>
-                                            Sec {{sIndex}}: Total <br /> ({{section.totalLessons}})
-                                        </th>
-                                        <th style="text-align: center;" title={{section.sectionTitle}}>
-                                            Sec {{sIndex}}: Done
-                                        </th>
-                                        {{/each}}
-
-                                        <th style="text-align: right;">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {{#each wrapper.enrolledUsers as |userWrap|}}
-                                    <tr>
-                                        <td>
-                                            <div class="user-meta">
-                                                <div class="name">{{userWrap.user.userName}}</div>
-                                                <div class="email">{{userWrap.user.userEmail}}</div>
-                                            </div>
-                                        </td>
-                                        <td style="color: #6b7280;">{{userWrap.user.enrolledAt}}</td>
-
-                                        <td style="text-align: center;">
-                                            <span
-                                                class="completion-badge {{if (gt userWrap.completionRatio 70) 'high' (if (lt userWrap.completionRatio 30) 'low' 'medium')}}">
-                                                {{userWrap.completionRatio}}%
-                                            </span>
-                                        </td>
-
-                                        {{#each userWrap.user.sections as |userSec|}}
-                                        <td style="text-align: center; color: #4b5563;">{{userSec.totalLessons}}</td>
-                                        <td
-                                            style="text-align: center; font-weight: 700; color: {{if (eq userSec.completedLessons userSec.totalLessons) '#16a34a' '#d97706'}};">
-                                            {{userSec.completedLessons}}
-                                        </td>
-                                        {{/each}}
-
-                                        <td style="text-align: right;">
-                                            <button type="button" class="btn btn-icon-danger"
-                                                style="color: #ef4444; background: #fee2e2; padding: 4px 10px; font-size: 0.8rem;"
-                                                title="Evict User" {{on "click" (fn this.removeUser wrapper userWrap)}}>
-                                                🗑
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    {{/each}}
-                                </tbody>
-                            </table>
+                            <span class="badge"
+                                style="background: #eef2ff; color: #4f46e5; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">COURSE</span>
                             {{/if}}
-                        </div>
-                    </td>
-                </tr>
-                {{/if}}
-                {{/each}}
+                        </td>
+                        <td><span class="badge"
+                                style="background: #f3f4f6; color: #4b5563; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">{{if
+                                wrapper.course.courseCategory wrapper.course.courseCategory 'N/A'}}</span>
+                        </td>
+                        <td style="text-align: center;">{{wrapper.enrolledUsers.length}}</td>
+                        <td style="text-align: center;">
+                            {{#if wrapper.enrolledUsers.length}}
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <div
+                                    style="width: 100px; background: #e5e7eb; height: 6px; border-radius: 3px; display: inline-block; position: relative;">
+                                    <div
+                                        style="width: {{wrapper.avgProgress}}%; background: #4f46e5; height: 100%; border-radius: 3px;">
+                                    </div>
+                                </div>
+                                <span
+                                    style="font-size: 0.85rem; font-weight: 600; color: #4b5563;">{{wrapper.avgProgress}}%</span>
+                            </div>
+                            {{else}}
+                            -
+                            {{/if}}
+                        </td>
+                    </tr>
 
-            </tbody>
-        </table>
-    </div>
+                    {{#if wrapper.isExpanded}}
+                    <tr class="nested-row">
+                        <td colspan="6" style="padding: 0;">
+                            <div class="nested-container"
+                                style="background: #f9fafb; padding: 1.5rem; border-top: 1px solid #edf2f7; border-bottom: 1px solid #edf2f7;">
+                                {{#if (eq wrapper.enrolledUsers.length 0)}}
+                                <p style="color: #6b7280; font-style: italic; margin: 0;">No users enrolled yet.</p>
+                                {{else}}
+                                <h4 style="margin-top: 0; margin-bottom: 1rem; font-size: 0.95rem; color: #374151;">
+                                    User {{if wrapper.isTest 'Score' 'Progress'}} Details</h4>
+                                <table class="nested-table"
+                                    style="width: 100%; background: #fff; border-radius: 4px; overflow: hidden; border: 1px solid #e2e8f0;">
+                                    <thead style="background: #f8fafc;">
+                                        <tr>
+                                            <th style="text-align: left; padding: 10px;">User</th>
+                                            <th style="text-align: center; padding: 10px;">{{if wrapper.isTest 'Best
+                                                Score' 'Progress'}}</th>
+                                            <th style="text-align: center; padding: 10px;">Enrolled At</th>
+                                            <th style="text-align: right; padding: 10px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#each wrapper.enrolledUsers as |userWrap|}}
+                                        <tr style="border-top: 1px solid #edf2f7;">
+                                            <td style="padding: 10px;">
+                                                <div style="font-weight: 500;">{{userWrap.user.userName}}</div>
+                                                <div style="font-size: 0.8rem; color: #6b7280;">
+                                                    {{userWrap.user.userEmail}}</div>
+                                            </td>
+                                            <td style="text-align: center; padding: 10px;">
+                                                <span
+                                                    style="padding: 2px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #e0e7ff; color: #3730a3;">
+                                                    {{userWrap.displayScore}}
+                                                </span>
+                                            </td>
+                                            <td
+                                                style="text-align: center; padding: 10px; color: #6b7280; font-size: 0.85rem;">
+                                                {{userWrap.user.enrolledAt}}</td>
+                                            <td style="text-align: right; padding: 10px;">
+                                                <button type="button" class="btn btn-icon-danger"
+                                                    style="color: #ef4444; background: #fee2e2; padding: 4px 8px; border: none; border-radius: 4px; cursor: pointer;"
+                                                    title="Evict User" {{on "click" (fn this.removeUser wrapper
+                                                    userWrap)}}>
+                                                    <i class="fa-solid fa-user-minus"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        {{/each}}
+                                    </tbody>
+                                </table>
+                                {{/if}}
+                            </div>
+                        </td>
+                    </tr>
+                    {{/if}}
+                    {{else}}
+                    <tr>
+                        <td colspan="6" style="padding: 3rem; text-align: center; color: #6b7280;">
+                            No courses found matching your criteria.
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </section>
 
     {{#if this.notification}}
-    <div class="notification-toast {{this.notification.type}}">
+    <div class="notification-toast {{this.notification.type}}"
+        style="position: fixed; bottom: 20px; right: 20px; background: {{if (eq this.notification.type 'success') '#10b981' '#ef4444'}}; color: white; padding: 12px 24px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 1000; display: flex; align-items: center; gap: 10px;">
         <span>{{this.notification.message}}</span>
-        <button type="button" style="background: none; border: none; font-size: 1.2rem; cursor: pointer;" {{on "click"
-            this.dismissNotification}}>×</button>
+        <button type="button" style="background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer;"
+            {{on "click" this.dismissNotification}}>×</button>
     </div>
     {{/if}}
 </div>

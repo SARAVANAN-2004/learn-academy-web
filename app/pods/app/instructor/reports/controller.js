@@ -1,40 +1,88 @@
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
 import { apiRequest } from 'learn-academy-web/utils/api';
 
 class CourseWrapper {
     @tracked isExpanded = false;
     @tracked isSelected = false;
+    @tracked enrolledUsers = [];
     constructor(course) {
         this.course = course;
 
-        // Compute overall sections for dynamic columns
-        this.enrolledUsers = (this.course.enrolledUsers || []).map(u => new EnrolledUserWrapper(u));
+        this.enrolledUsers = (this.course.enrolledUsers || []).map(
+            (u) => new EnrolledUserWrapper(u)
+        );
     }
 
     get sectionHeaders() {
         return this.course.sections || [];
+    }
+
+    get isTest() {
+        return (
+            typeof this.course.type === 'string' &&
+            this.course.type.toUpperCase() === 'TEST'
+        );
+    }
+
+    get itemId() {
+        return this.course.id || this.course.courseId || this.course.testId;
+    }
+
+    get displayTitle() {
+        return (
+            this.course.courseName ||
+            this.course.testTitle ||
+            this.course.title ||
+            'Untitled'
+        );
+    }
+
+    get avgProgress() {
+        if (!this.enrolledUsers || this.enrolledUsers.length === 0) return 0;
+
+        if (this.isTest) {
+            let usersWithAttempts = this.enrolledUsers.filter(u => (u.user.attemptsCount || 0) > 0).length;
+            return Math.round((usersWithAttempts / this.enrolledUsers.length) * 100);
+        }
+
+        let sum = this.enrolledUsers.reduce((acc, user) => acc + user.completionRatio, 0);
+        return Math.round(sum / this.enrolledUsers.length);
     }
 }
 
 class EnrolledUserWrapper {
     constructor(user) {
         this.user = user;
-        // Transform user section progress if needed
+    }
+
+    get userId() {
+        return this.user.id || this.user.userId;
+    }
+
+    get displayName() {
+        return (
+            this.user.userName || this.user.name || this.user.email || 'this user'
+        );
     }
 
     // Total lessons across all sections for this user
     get totalLessons() {
         if (!this.user.sections) return 0;
-        return this.user.sections.reduce((sum, sec) => sum + (sec.totalLessons || 0), 0);
+        return this.user.sections.reduce(
+            (sum, sec) => sum + (sec.totalLessons || 0),
+            0
+        );
     }
 
     // Total completed lessons across all sections for this user
     get totalCompletedLessons() {
         if (!this.user.sections) return 0;
-        return this.user.sections.reduce((sum, sec) => sum + (sec.completedLessons || 0), 0);
+        return this.user.sections.reduce(
+            (sum, sec) => sum + (sec.completedLessons || 0),
+            0
+        );
     }
 
     // Percentage of completion for the user
@@ -43,13 +91,35 @@ class EnrolledUserWrapper {
         if (total === 0) return 0;
         return Math.round((this.totalCompletedLessons / total) * 100);
     }
+
+    // Test specific properties
+    get isTest() {
+        return (
+            this.user.bestScore !== undefined || this.user.attemptsCount !== undefined
+        );
+    }
+
+    get displayScore() {
+        if (this.isTest) {
+            return `Score: ${this.user.bestScore || 0}`;
+        }
+        return `${this.completionRatio}%`;
+    }
 }
 
 export default class InstructorReportsController extends Controller {
+    queryParams = ['type'];
+    @tracked type = 'all';
+
     @tracked wrappedCourses = [];
     @tracked searchQuery = '';
     @tracked isExporting = false;
     @tracked notification = null;
+
+    @action
+    setType(newType) {
+        this.type = newType;
+    }
 
     @action
     dismissNotification() {
@@ -65,9 +135,9 @@ export default class InstructorReportsController extends Controller {
     }
 
     @action
-    initData(rawCourses) {
+    initData(rawItems) {
         this.searchQuery = '';
-        this.wrappedCourses = rawCourses.map(c => new CourseWrapper(c));
+        this.wrappedCourses = rawItems.map((c) => new CourseWrapper(c));
     }
 
     @action
@@ -81,22 +151,38 @@ export default class InstructorReportsController extends Controller {
     }
 
     get filteredCourses() {
-        if (!this.searchQuery) return this.wrappedCourses;
+        let items = this.wrappedCourses;
+        if (this.type === 'course') {
+            items = items.filter(
+                (w) => !w.course.type || w.course.type.toUpperCase() !== 'TEST'
+            );
+        } else if (this.type === 'test') {
+            items = items.filter(
+                (w) => w.course.type && w.course.type.toUpperCase() === 'TEST'
+            );
+        }
+
+        if (!this.searchQuery) return items;
         let q = this.searchQuery.toLowerCase();
-        return this.wrappedCourses.filter(w => {
-            return (w.course.courseName && w.course.courseName.toLowerCase().includes(q)) ||
-                (w.course.courseCategory && w.course.courseCategory.toLowerCase().includes(q));
+        return items.filter((w) => {
+            let name =
+                w.course.courseName || w.course.testTitle || w.course.title || '';
+            let cat = w.course.courseCategory || '';
+            return name.toLowerCase().includes(q) || cat.toLowerCase().includes(q);
         });
     }
 
     get allSelected() {
-        return this.filteredCourses.length > 0 && this.filteredCourses.every(w => w.isSelected);
+        return (
+            this.filteredCourses.length > 0 &&
+            this.filteredCourses.every((w) => w.isSelected)
+        );
     }
 
     @action
     toggleSelectAll(event) {
         let isChecked = event.target.checked;
-        this.filteredCourses.forEach(w => w.isSelected = isChecked);
+        this.filteredCourses.forEach((w) => (w.isSelected = isChecked));
     }
 
     @action
@@ -111,69 +197,54 @@ export default class InstructorReportsController extends Controller {
 
     @action
     async removeUser(wrapper, userWrapper) {
-        let confirmDel = confirm(`Are you sure you want to remove ${userWrapper.user.name || 'this user'} from the course?`);
+        let itemType = wrapper.isTest ? 'test' : 'course';
+        let confirmDel = confirm(
+            `Are you sure you want to remove ${userWrapper.displayName} from the ${itemType}?`
+        );
         if (!confirmDel) return;
 
-        let courseId = wrapper.course.id || wrapper.course.courseId;
-        let userId = userWrapper.user.id || userWrapper.user.userId;
+        let itemId = wrapper.itemId;
+        let userId = userWrapper.userId;
+        let endpoint = wrapper.isTest
+            ? `/api/instructor/tests/${itemId}/users/${userId}`
+            : `/api/instructor/courses/${itemId}/users/${userId}`;
 
         try {
-            let res = await apiRequest(`/api/instructor/courses/${courseId}/users/${userId}`, {
-                method: 'DELETE'
+            let res = await apiRequest(endpoint, {
+                method: 'DELETE',
             });
 
             if (res.ok) {
-                this.notification = { type: 'success', message: 'User successfully removed from the course.' };
+                this.notification = {
+                    type: 'success',
+                    message: `User successfully removed from the ${itemType}.`,
+                };
                 this.autoDismissNotification();
-                // Remove from local wrapped state instantly
-                wrapper.enrolledUsers = wrapper.enrolledUsers.filter(u => u !== userWrapper);
+                wrapper.enrolledUsers = wrapper.enrolledUsers.filter(
+                    (u) => u !== userWrapper
+                );
             } else {
-                throw new Error("Failed to delete");
+                let errorData = await res.json().catch(() => ({}));
+                throw new Error(
+                    errorData.message || `Failed to remove user from the ${itemType}.`
+                );
             }
         } catch (e) {
             console.error(e);
-            this.notification = { type: 'error', message: 'Failed to remove user from course' };
+            this.notification = {
+                type: 'error',
+                message: e.message || `Failed to remove user from the ${itemType}.`,
+            };
             this.autoDismissNotification();
         }
     }
 
-    @action
-    async exportReport(format) {
-        let selectedWrappers = this.wrappedCourses.filter(w => w.isSelected);
-        if (selectedWrappers.length === 0) {
-            alert("Please select at least one course to export.");
-            return;
-        }
-
-        let courseIds = selectedWrappers.map(w => w.course.id || w.course.courseId);
-
-        this.isExporting = true;
-        try {
-            let res = await apiRequest(`/api/instructor/course-report/export?format=${format}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ courseIds })
-            });
-
-            if (!res.ok) throw new Error("Export failed");
-
-            let blob = await res.blob();
-            let url = window.URL.createObjectURL(blob);
-            let a = document.createElement('a');
-            a.href = url;
-            a.download = `instructor-report.${format}`;
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            a.remove();
-
-            this.notification = { type: 'success', message: 'Export downloaded successfully!' };
-        } catch (e) {
-            console.error(e);
-            this.notification = { type: 'error', message: 'Error generating export' };
-        } finally {
-            this.isExporting = false;
-            this.autoDismissNotification();
-        }
+    get exportPayload() {
+        let selectedWrappers = this.wrappedCourses.filter((w) => w.isSelected);
+        let courseIds = selectedWrappers
+            .filter((w) => !w.isTest)
+            .map((w) => w.itemId);
+        let testIds = selectedWrappers.filter((w) => w.isTest).map((w) => w.itemId);
+        return { courseIds, testIds };
     }
 }
